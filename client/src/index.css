@@ -11,3 +11,25 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.myHover {
+  /* font: 3rem; */
+  color: grey;
+  padding: 9px 10px 5px 10px;
+  border-radius: 5px;
+}
+.myHover:hover {
+  color: white;
+  background: #00a2ff;
+}
+.myHover:active {
+  /* color: white; */
+  background: black;
+}
+
+.taskHover:hover {
+  background: whitesmoke;
+}
+.taskHover:active {
+
+  background: coral;
+}
