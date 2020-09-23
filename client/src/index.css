@@ -33,3 +33,319 @@ code {
 
   background: coral;
 }
+
+
+.drag-drop-container {
+  height: 100%;
+  width: 50vh;
+  border: 1px solid black;
+  overflow-y: auto;
+}
+
+.item {
+  margin: 20px;
+  padding: 10px;
+  border: 1px solid blue;
+  cursor: pointer;
+}
+
+.ruler{
+  width: 900px;
+  height: 5vh;
+  background: rebeccapurple;
+  border: 1px solid rgb(44, 153, 153);
+
+}
+.fullPic{
+  margin: 29px 0;
+  width: 1000px;
+  height: 500px;
+  border: 1px solid tomato;
+}
+.picGridSection{
+  width: 912px;
+  background: rosybrown;
+  /* margin: auto; */
+}
+.pictureGrid{
+  /* margin: 0; */
+  background-color: teal;
+  width: 300px;
+  height: 250px;
+  margin: 2px;
+
+  /* border: 1px solid purple; */
+  /* height: 50vh;
+  width: 50vh; */
+}
+.test{
+  position: relative;
+}
+.testHidden{
+  visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.picCover{
+  background: saddlebrown;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.test:hover .picCover{
+  visibility: hidden;
+}
+
+/* .test:active .testHidden {
+  visibility: visible;
+} */
+.gridPic{
+  background-image: url(components/PictureGrid/assets/alexis-antonio-TFth26tEjss-unsplash.jpg);
+  /* width: 100%; */
+  background-size: 900px;
+  /* margin: 2px; */
+}
+.img2{
+  background-position-x: -300px;
+  background-repeat: no-repeat;
+}
+.img3{
+  background-position-x: -600px;
+  background-repeat: no-repeat;
+}
+
+.img4{
+  background-position-y: -250px;
+}
+.img5{
+  background-position-y: -250px;
+  background-position-x: -300px;
+}
+.img6{
+  background-position-y: -250px;
+  background-position-x: -600px;
+}
+.img7{
+  background-position-y: -500px;
+  background-position-x: 0;
+}
+.img8{
+  background-position-y: -500px;
+  background-position-x: -300px;
+}
+.img9{
+  background-position-y: -500px;
+  background-position-x: -600px;
+}
+
+.myCard{
+  margin-top: 10px;
+  width: 30%;
+  max-height: 70vh;
+}
+/* img {
+  max-width: 100%;
+} */
+.empAvatar{
+  height: 35vh;
+  width: 35vh;
+  object-fit: cover;
+}
+.empAvatarThmb{
+  height: 10vh;
+  width: 10vh;
+  object-fit: cover;
+}
+
+.bucket{
+  width: 65vh;
+  margin: 5px auto;
+  background: #bbbbbb;
+}
+.green{
+  color: #8fd12b;
+  cursor: pointer;
+}
+.grey{
+  color: #979797;
+  cursor: pointer;
+}
+.grey:hover{
+  color: #d6bf72;
+}
+.cardTitle{
+  /* min-height: 30vh; */
+  background: #fafafa;
+  max-height: 18vh;
+  border: 1px solid rgb(140, 141, 98);
+}
+.myList{
+  background: #f3f3f3;
+  min-height: 55px;
+  margin: 5px;
+  border-radius: 50px;
+  list-style: none;
+  padding: 15px;
+  filter: drop-shadow(2px 2px 2px #919191);
+  /* border: 1px solid green; */
+}
+.myInput{
+  background: #f3f3f3;
+  min-height: 55px;
+  margin: 5px;
+  border-radius: 50px;
+  list-style: none;
+  padding: 15px;
+  filter: drop-shadow(2px 2px 2px #919191);
+  /* border: 1px solid green; */
+}
+/* input[type=text] {
+  border: 1px solid #8842d5;
+  border-radius: 5px;  
+} */
+.bktTaskName{
+  background: #fdfdfd;
+  border-radius: 5px;
+  padding: 10px;
+  border-style: none;
+
+}
+.bktTaskName:active{
+  /* background: #fdfdfd; */
+  border-style: none;
+}
+.myListDone{
+  background: #969696;
+  min-height: 70px;
+  margin: 5px;
+  border-radius: 50px;
+  list-style: none;
+  padding: 15px;
+  text-decoration: line-through;
+  filter: drop-shadow(2px 2px 2px #919191);
+}
+.myList:hover{
+  background: #ffffff;
+  filter: drop-shadow(2px 2px 2px #a8a8a8);
+  
+  /* padding: 20px; */
+}
+.mainBox{
+  background: #dad2ec;
+  padding-top: 20px;
+  
+}
+
+.myCardLg{
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 15px;
+  margin: 5px 0;
+  box-shadow: 2px 5px 5px #777281;
+  
+}
+
+.newCardLg{
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 15px;
+  margin: 5px 0;
+
+  box-shadow: 2px 5px 5px #777281;
+  
+}
+.circlBtn{
+  cursor: pointer;
+  background: #f3bf4e;
+  width: 50px;
+  height: 50px;
+  padding: 3px;
+  border-radius: 25px;
+  font-size: 1.6rem;
+  color: white;
+  filter: drop-shadow(2px 2px 2px #a8a8a8);
+  border: 3px solid #fad48300;
+}
+.circleLabel{
+  background: #f8eacc;
+  /* width: 100px; */
+  /* height: 50px; */
+  padding: 3px;
+  border-radius: 25px;
+
+}
+.circlBtn:hover{
+  border: 3px solid #fad483;
+  
+}
+.circlBtn:active{
+  background: #fad483;
+}
+.darkPurpleSection{
+  background: #ad9fcc;
+  /* border: 3px solid #a090c4; */
+  padding: 20px;
+  border-radius: 15px;
+}
+.label{
+  margin: 13px 20px 10px 20px;
+}
+.myBtn{
+  background: #876fb9;
+  padding: 10px;
+  border-style: none;
+  color: white;
+}
+.zIndex{
+  z-index: 100000;
+}
+.hide{
+  display: none;
+}
+.myDropDown{
+  position: relative;
+}
+.myMenu{
+  background: pink;
+  position: absolute;
+  z-index: 1000;
+}
+.membThmSmall{
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.membThmSmallDisabled{
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+    filter: grayscale(100%);
+}
+.membProPic{
+  width: 100%;
+  border: 5px solid rebeccapurple;
+  border-radius: 10px;
+}
+
+/* GROCERY */
+.groceryImg{
+  width: 15vh;
+  margin: 0 auto;
+  margin: 5px;
+}
+.groceryCrdWdth {
+  margin: 0 auto;
+  width: 57vh;
+}
+.plusBtn{
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+.plusBtn:hover{
+  font-size: 1.7rem;
+  color: #f3bf4e;
+}

@@ -21,7 +21,6 @@ async function registerUser( userData ){
         email: userData.email,
         password: passwordHash
     };
-
     const dbUser = new db.users( saveData );
     const saveUser = await dbUser.save();
     return { 
@@ -55,14 +54,8 @@ async function loginUser( email, password ) {
         email: userData.email,
     };
 }
-
-
-
 async function postTasks( userTasks ){
-    // const taskData = {
-    //     task: userTasks.task,
-    //     completionDate: userTasks.completionDate,
-    // };
+
     console.log('in orm ', userTasks)
     const taskInfo = {
         'task': `${userTasks.task}`,
@@ -77,74 +70,231 @@ async function getTasks(userId){
     console.log('in orm: ', getTaskLists)
     return getTaskLists.tasks;
 }
+async function postBackLogTask( userTasks ){
+    console.log('in orm ', userTasks)
+    const taskInfo = {
+        'taskName': `${userTasks.taskName}`,
+        'taskType': `${userTasks.taskType}`,
+        // 'completionDate': `${userTasks.completionDate}`
+    }
+    const addTask = await db.users.findOneAndUpdate({ _id: userTasks.userId }, { $push: {myBackLog: taskInfo} });
+    return {message: "phase added successfully!!"}
+}
+async function postBucket( userTasks ){
+    console.log('in orm ', userTasks)
+    const bucketInfo = {
+        'bucketName': `${userTasks.bucketName}`,
+        'bucketOwnerId': `${userTasks.bucketOwnerId}`
+    }
+    const addBucket = await db.users.findOneAndUpdate({ _id: userTasks.userId }, { $push: {myBucket: bucketInfo} });
+    return {message: "phase added successfully!!"}
+}
+async function postMembersBucket( bucketData ){
+    console.log('in orm memberbucke data is: ', bucketData)
+// bucketName: "", bucketOwner: memberName, bucketOwnerId: memberId, userId: localStorage.id
+    const saveData = {
+        userId: bucketData.userId,
+        bucketName: bucketData.bucketName,
+        bucketOwner: bucketData.bucketOwner,
+        bucketOwnerId: bucketData.bucketOwnerId
+    }; 
+    const dbMemberBuckets = new db.memberBuckets( saveData );
+    const saveUser = await dbMemberBuckets.save();
+    return {message: "bucket added successfully!!"}
+}
+async function postBucketList( userTasks ){
+    console.log('in orm ', userTasks)
+
+    const taskData = {
+        'taskName': `${userTasks.taskName}`,
+        'taskOwner': `${userTasks.taskOwner}`,
+        'taskOwnerId': `${userTasks.taskOwnerId}`,
+    };
+    const addBucket = await db.users.findOneAndUpdate(
+        { _id: userTasks.userId,  "myBucket._id": userTasks.bucketId  }, 
+        { $push: {"myBucket.$.bucketTasks": taskData} });
+
+    const deleteEmployee = await db.users.updateOne({_id: userTasks.userId},
+        { "$pull": 
+            { "myBackLog": { _id: userTasks.backlogId }}
+        });
+    return {message: "phase added successfully!!"}
+}
+async function postBucketListWithoutDelete( userTasks ){
+    console.log('in orm ', userTasks);
+    const taskData = {
+        'taskName': `${userTasks.taskName}`,
+        'taskOwner': `${userTasks.taskOwner}`,
+        'taskOwnerId': `${userTasks.taskOwnerId}`,
+    };
+    const addBucket = await db.users.findOneAndUpdate(
+        {    _id: userTasks.userId,
+            "myBucket._id": userTasks.bucketId  }, 
+        { $push: {"myBucket.$.bucketTasks": taskData} });
+    return {message: "phase added successfully!!"}
+}
+async function assignOwnertoTask( userTasks ){
+    console.log('in orm ', userTasks)
+    const taskData = {
+        'taskName': `${userTasks.taskName}`,
+    };
+    const assignOwner = await db.users.findOneAndUpdate(
+        {   _id: userTasks.userId,  
+            "myBackLog._id": userTasks.taskId  }, 
+        { $set: {
+            "myBackLog.$.taskOwner": userTasks.membName,
+            "myBackLog.$.taskOwnerId": userTasks.membId,
+    } });
+    return {message: "phase added successfully!!"}
+}
+
+async function getBackLogTask(userId){
+    console.log( 'in orm userId', userId)
+    const getTaskLists = await db.users.findOne({ _id: userId});
+    console.log('in orm: ', getTaskLists)
+    return getTaskLists.tasks;
+}
+async function getBacklogLists(userId){
+    const getBackList = await db.users.findOne({ _id: userId});
+    return getBackList;
+}
+async function getMemberList(userId){
+    const getMemberList = await db.users.findOne({ _id: userId});
+    return getMemberList.myHouseMembers;
+}
+//adding members
+async function postMember( employee ){
+    // const teamID = employee.teamId;
+    const userId = employee.userId;
+
+    const membData = {
+        'membName': `${employee.membName}`,
+        'membDesc': `${employee.membDesc}`,
+        'membRole': `${employee.membRole}`,
+        'membSex': `${employee.membSex}`,
+        'membPic': `${employee.membPic}`,
+    };
+    const createMember = await db.users.findOneAndUpdate({ _id: employee.userId }, { $push: {myHouseMembers: membData} });
+    console.log(createMember)
+    return { 
+        message: "member successfully created", 
+    };   
+}
+//=============
 async function getUserInfo(userId){
     const getUserInfo = await db.users.findOne({ _id: userId});
     return getUserInfo;
 }
-async function getDoLists(userId){
-    // const getDoList = await db.users.find(
-    //     { 
-    //         '_id': `${userId}`,
-    //         // "city" : { "$in": ["Pune", "Mumbai"] }
-    //         'tasks': {'taskDo': 'true'}
-    //     }
-    // );
-    const getDoList = await db.users.findOne({ _id: userId});
 
-    // console.log('doList in orm: ', getDoList.tasks)
+async function getDoLists(userId){
+    const getDoList = await db.users.findOne({ _id: userId});
     const doListArr=[];
     getDoList.tasks.forEach(element => {
-        // console.log('wahta?? ',element.task)
         if(element.taskDo == true){
-            // console.log('which is false: ',element.task)
             doListArr.push(element);
         }else return
     });
-    console.log(doListArr)
-
     return doListArr;
 }
-async function postPhase(taskPhaseData){
-    console.log('something in orm: ', taskPhaseData)
-    const taskId = taskPhaseData.taskId;
-    const phaseInfo = {
-        'phaseName': `${taskPhaseData.taskPhase.phaseName}`,
-        'phaseDesc': `${taskPhaseData.taskPhase.phaseDesc}`,
-        'phaseUser': `${taskPhaseData.taskPhase.phaseUser}`,
-        'phaseDate': `${taskPhaseData.taskPhase.phaseDate}`,
+async function getDoingLists(userId){
+    const getDoingList = await db.users.findOne({ _id: userId});
+    const doingListArr=[];
+    getDoingList.tasks.forEach(element => {
+        if(element.taskDoing == true){
+            doingListArr.push(element);
+        }else return
+    });
+    return doingListArr;
+}
+async function getDoneLists(userId){
+    const getDoneLists = await db.users.findOne({ _id: userId});
+    const doneListArr=[];
+    getDoneLists.tasks.forEach(element => {
+        if(element.taskDone == true){
+            doneListArr.push(element);
+        }else return
+    });
+    return doneListArr;
+}
+async function completeBuckTask(bucketTask){
+    const userId = bucketTask.userId
+    const bucketId = bucketTask.bucketId
+    const bucketTaskId = bucketTask.bucketTaskId
+    console.log("bucketTask: ", bucketTask)
+
+    const completeBckTsk = await db.users.findOneAndUpdate(
+    { _id: userId},
+    { "$set": 
+    {   "myBucket.$[updateBucket].bucketTasks.$[bucketTasks].complete": "true" }},   {
+        "arrayFilters": 
+            [
+                {"updateBucket._id" : bucketId},
+                {"bucketTasks._id" : bucketTaskId}
+            ]
+        }
+    );
+    return { message: "changes to Do"};
+}
+async function bucketStatus(userId, bucketId){
+    const changeBucketStatus = await db.users.updateOne(
+        { _id: userId, "myBucket._id": bucketId}, 
+        { "$set": { "myBucket.$.active": "true" }}, { safe: true, multi:true }, function(err, obj) {
+        console.log('what is it? ',err)
     }
-    const updatePhase = await db.tasks.findOneAndUpdate({ _id: taskId }, { $push: {phase: phaseInfo} });
-    return {message: "phase added successfully!!"}
-
+    
+    );
+    return { message: "changes to Do"};
 }
+async function memberBucket(userId, memberId){
+    const memberBucket = await db.memberBuckets.find({ bucketOwnerId: memberId,   userId: userId});
 
-async function getTask( taskId ){
-        console.log('in orm: ',taskId);
+    // const userData = await db.users.findOne({ email: email });
 
-    const getTask = await db.tasks.find({
-        "_id" : taskId
+    console.log('in orm memberBucket: ', memberBucket)
+    
+    return(memberBucket);
+}
+async function bucketStatusToFalse(userId, bucketId){
+    const changeBucketStatus = await db.users.updateOne(
+        { _id: userId, "myBucket._id": bucketId}, 
+        { "$set": { "myBucket.$.active": "false" }}, { safe: true, multi:true }, function(err, obj) {
+        console.log('what is it? ',err)
     });
-    return getTask;
+    return { message: "changes to Do"};
 }
-async function deleteTask( taskId ){
-
-    // console.log('in orm: ',taskId);
-    const deleteReview =await db.tasks.deleteOne( { "_id" : taskId}, function (err) {
-        if (err) return handleError(err)
+async function moveDoToDoing(userId, taskId){
+    const changeDoToFalse = await db.users.updateOne(
+        { _id:  userId, "tasks._id": taskId}, 
+        { "$set": { "tasks.$.taskDo": "false" }}, { safe: true, multi:true }, function(err, obj) {
+        console.log('what is it? ',err)
     });
-    return { message: "Your Review has been deleted !!"};
+    const changeDoingToTrue = await db.users.updateOne(
+        { _id:  userId, "tasks._id": taskId}, 
+        { "$set": { "tasks.$.taskDoing": "true" }}, { safe: true, multi:true }, function(err, obj) {
+        console.log('what is it? ',err)
+    });
+    return { message: "Task Moved to Do"};
 }
-async function deletePhase( phaseId, taskId  ){
-    // console.log('in orm task: ', taskId);
-    // console.log('in orm phase: ', phaseId);
-    const deletePhase = await db.tasks.update({
-        _id: taskId }, { "$pull": { 
-            "phase" : { "_id": phaseId } }}, {
-            safe: true, multi: true }, function(err, obj) { 
-                console.log(err)
-            });
-            return deletePhase;
-    };
+async function moveDoingToDone(userId, taskId){
+    const changeDoingToFalse = await db.users.updateOne(
+        { _id:  userId, "tasks._id": taskId}, 
+        { "$set": { "tasks.$.taskDoing": "false" }}, { safe: true, multi:true }, function(err, obj) {
+        console.log('what is it? ',err)
+    });
+    const changeDoneToTrue = await db.users.updateOne(
+        { _id:  userId, "tasks._id": taskId}, 
+        { "$set": { "tasks.$.taskDone": "true" }}, { safe: true, multi:true }, function(err, obj) {
+        console.log('what is it? ',err)
+    });
+    return { message: "Task Moved to Do"};
+
+}
+
+
+
+
+
+
 
 
 module.exports = {
@@ -154,14 +304,26 @@ module.exports = {
     loginUser,
     //posting task
     postTasks,
+    postBackLogTask,
+    getBacklogLists,
+    postMember,
+    getMemberList,
+    postBucket,
+    bucketStatus,
+    bucketStatusToFalse,
+    postBucketList,
+    postBucketListWithoutDelete,
+    assignOwnertoTask,
+    completeBuckTask,
+    postMembersBucket,
+    memberBucket,
     //users Information
     getUserInfo,
     getDoLists,
+    getDoingLists,
+    getDoneLists,
+    moveDoToDoing,
+    moveDoingToDone
 
 
-    getTasks,
-    deleteTask,
-    getTask,
-    postPhase,
-    deletePhase
 }

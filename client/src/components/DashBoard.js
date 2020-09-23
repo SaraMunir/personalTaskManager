@@ -17,28 +17,17 @@ function DashBoard() {
         const userId = localStorage.id
         const fetchUserInfo = await fetch (`/api/userInfo/${userId}`).then( res => res.json());
         setUserInfo(fetchUserInfo);
-        setTasksList(fetchUserInfo.tasks)
-        
-        // if( fetchUserInfo.tasks.taskDo == "true" ){
-
-        //     console.log('is is ',fetchUserInfo.tasks);
-            
-        //     setDoList(fetchUserInfo.tasks);
-
-        // }
+        setTasksList(fetchUserInfo.tasks);        
         console.log('fetchUserInfo: ', fetchUserInfo.tasks)
     }
-    
-
     useEffect( function(){
         loadUserInfo()
     }, []);
-    
     return (
         <div className="container-fluid" >
             <div className="row">
                 <Tasks taskList={taskList} doList={doList} loadUserInfo={loadUserInfo}/>
-                <GroceryList />
+                {/* <GroceryList /> */}
             </div>
         </div>
     )

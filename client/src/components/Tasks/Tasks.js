@@ -8,8 +8,38 @@ function Tasks(props) {
     const [taskList, setTasksList] = useState([]);
     const [doList, setDoList] = useState([]);
     const [doingList, setDoingList] = useState([]);
+    const [doneList, setDoneList] = useState([]);
+    const userId = localStorage.id
 
-    async function moveTaskToDoing(id){
+    async function moveTaskToDoing(taskId){
+        console.log('taskId? ', taskId);
+        const moveTaskToDoing = await fetch(`/api/moveToDoing/${userId}/${taskId}`, 
+            {
+                method: 'PUT',
+                headers:{
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify()
+            }
+        ).then(result => result.json());
+        LoadDoList();
+        LoadDoingList();
+    }
+    async function moveTaskToDone(taskId){
+        console.log('taskId? ', taskId);
+        const moveTaskToDone = await fetch(`/api/moveToDone/${userId}/${taskId}`, 
+            {
+                method: 'PUT',
+                headers:{
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify()
+            }
+        ).then(result => result.json());
+        LoadDoingList();
+        LoadDoneList();
+    }
+    async function moveDoneToArchive(id){
         console.log('id? ', id);
     }
     async function drag(e){
@@ -42,16 +72,20 @@ function Tasks(props) {
         console.log('fetched DoList: ', fetchDoList)
     }
     async function LoadDoingList(){
-        // console.log('loading doList');
-        const userId = localStorage.id
         const fetchDoingList = await fetch (`/api/doingList/${userId}`).then( res => res.json());
         setDoingList(fetchDoingList);
         console.log('fetched DoingList: ', fetchDoingList)
+    }
+    async function LoadDoneList(){
+        const fetchDoneList = await fetch (`/api/doneList/${userId}`).then( res => res.json());
+        setDoneList(fetchDoneList);
+        console.log('fetched DoneList: ', fetchDoneList)
     }
     useEffect( function(){
         // loadT ask();
         LoadDoList();
         LoadDoingList();
+        LoadDoneList();
     }, []);
     return (
         <div className="card col-lg-9">
@@ -81,7 +115,7 @@ function Tasks(props) {
                 <h3 class="card-title">Tasks</h3>
             </div>
             <div className="card-body row">
-                <div className="card col-lg-4">
+                <div className="doSect card col-lg-4">
                     <div className="card-body">
                         <div className="d-flex justify-content-between ">
                             <h5 class="card-title">DO</h5>
@@ -93,32 +127,36 @@ function Tasks(props) {
                                 <div className="card-body">
                             {tasks.task}</div>
                             </div>):'nothing to show'}
-                            {/* <div className="card mt-2 taskHover" onClick={moveTaskToDoing}>
-                                <div className="card-body">
-                                something
-                                </div>
-                            </div> */}
-                            {/* <div className="card mt-2" draggable="true" ondragstart={drag}>
-                                <div className="card-body">
-                                something
-                                </div>
-                            </div>
-                            <div className="card mt-2">
-                                <div className="card-body">
-                                something
-                                </div>
-                            </div> */}
                         </div>
                     </div>
                 </div>
-                <div className="card col-lg-4">
+                <div className="doingSect card col-lg-4">
                     <div className="card-body">
-                    <h5 class="card-title">DOING</h5>
+                        <div className="d-flex justify-content-between ">
+                            <h5 class="card-title">DOING</h5>
+                            {/* <i class="fas fa-plus myHover" onClick={() => setLgShow(true)} ></i> */}
+                        </div>
+                        <div id="taskSection">
+                            { doingList ? doingList.map(tasks=>
+                            <div className="card mt-2 taskHover" onClick={()=>moveTaskToDone(tasks._id)}>
+                                <div className="card-body">
+                            {tasks.task}</div>
+                            </div>):'nothing to show'}
+                        </div>
                     </div>
                 </div>
-                <div className="card col-lg-4">
+                <div className="doneSect card col-lg-4">
                     <div className="card-body">
-                    <h5 class="card-title">DONE</h5>
+                        <div className="d-flex justify-content-between ">
+                            <h5 class="card-title">DONE</h5>
+                        </div>
+                        <div id="taskSection">
+                            { doneList ? doneList.map(tasks=>
+                            <div className="card mt-2 taskHover" onClick={()=>moveDoneToArchive(tasks._id)}>
+                                <div className="card-body">
+                            {tasks.task}</div>
+                            </div>):'nothing to show'}
+                        </div>
                     </div>
                 </div>
             </div>
