@@ -38,27 +38,23 @@ function LogIn() {
                 },
                 body: JSON.stringify(userData)
             }).then( result=>result.json())
+            if( !apiResult.message ){
+                setAlertMessage( { type: 'danger', message: apiResult.error } );
+                return;
+            };
             console.log(apiResult)
-
-            localStorage.setItem("email", apiResult.email);
             localStorage.setItem('id', apiResult.id);
             localStorage.setItem('firstName', apiResult.firstName);
             localStorage.setItem('lastName', apiResult.lastName);
-
-        if( !apiResult.message ){
-            setAlertMessage( { type: 'danger', message: apiResult.error } );
-            return;
-        };
-
+            localStorage.setItem('profileImg', apiResult.profileImg);
         setAlertMessage( { type: 'success', message: 'Loading, please wait...' } );
         localStorage.email = ( apiResult.rememberMe ? apiResult.email : '' );
-        setTimeout( function(){ setIsLoggedIn(true); }, 1000 );
-        
+        setTimeout( function(){ setIsLoggedIn(true); }, 2000 );
     }
 
     return (
         <div class="container card mt-4 col-md-8">
-            { isLoggedIn ? <Redirect to='/Dashboard' /> : '' }
+            { isLoggedIn ? <Redirect to='/Profiles' /> : '' }
             <div className={ alertMessage.type ? `alert alert-${alertMessage.type}` : 'd-hide' } role="alert">
                 {alertMessage.message}
             </div>

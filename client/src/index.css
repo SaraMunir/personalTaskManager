@@ -159,9 +159,10 @@ code {
 }
 
 .bucket{
+  padding: 10px;
   width: 65vh;
   margin: 5px auto;
-  background: #bbbbbb;
+  background: #e2e2e2;
 }
 .green{
   color: #8fd12b;
@@ -188,8 +189,17 @@ code {
   list-style: none;
   padding: 15px;
   filter: drop-shadow(2px 2px 2px #919191);
-  /* border: 1px solid green; */
 }
+.myListDone2{
+  background: #c7c7c7;
+  min-height: 55px;
+  margin: 5px;
+  border-radius: 50px;
+  list-style: none;
+  padding: 15px;
+  filter: drop-shadow(2px 2px 2px #919191);
+}
+
 .myInput{
   background: #f3f3f3;
   min-height: 55px;
@@ -234,26 +244,20 @@ code {
 .mainBox{
   background: #dad2ec;
   padding-top: 20px;
-  
 }
-
 .myCardLg{
   background: #ffffff;
   padding: 20px;
   border-radius: 15px;
   margin: 5px 0;
   box-shadow: 2px 5px 5px #777281;
-  
 }
-
 .newCardLg{
   background: #ffffff;
   padding: 20px;
   border-radius: 15px;
-  margin: 5px 0;
-
+  margin: 5px auto;
   box-shadow: 2px 5px 5px #777281;
-  
 }
 .circlBtn{
   cursor: pointer;
@@ -297,6 +301,44 @@ code {
   border-style: none;
   color: white;
 }
+.myBtnRnd{
+  cursor: pointer;
+  padding: 5px 20px;
+  border-style: none;
+  color:  #876fb9;
+  border-radius: 30px;
+  border: 2px solid #876fb9;
+}
+.myBtnRndDeactive{
+  cursor: pointer;
+  padding: 5px 20px;
+  border-style: none;
+  background: #7e778b;
+  color:  #443d53;
+  border-radius: 30px;
+  border: 2px solid #443d53;
+
+}
+.myBtnRnd:hover{
+  background: #876fb9;
+  text-decoration: none;
+  color: white;
+}
+.myBtnRndOrng{
+  background: #eb5f5f;
+  padding: 8px 20px;
+  border-style: none;
+  color:  white;
+  border-radius: 30px;
+  border: 2px solid #eb5f5f;
+  cursor: pointer;
+}
+.myBtnRndOrng:hover{
+  border: 2px solid #eb5f5f;
+  background: rgba(228, 130, 130, 0.507);
+  color:  #eb5f5f;
+  font-weight: 600;
+}
 .zIndex{
   z-index: 100000;
 }
@@ -316,6 +358,7 @@ code {
   height: 40px;
   border-radius: 50%;
   object-fit: cover;
+  cursor: pointer;
 }
 .membThmSmallDisabled{
   width: 40px;
@@ -348,4 +391,359 @@ code {
 .plusBtn:hover{
   font-size: 1.7rem;
   color: #f3bf4e;
+}
+
+
+.listHeight{
+  padding: 10px;
+  height: 90vh;
+  overflow-y: scroll;
+  background: #ebebeb;
+  border-radius: 5px;
+}
+.myInput2{
+  width: 100%;
+  padding: 10px 20px;
+  border-radius: 25px;
+  background: #ad9fcc;
+  border: #a8a8a800;
+}
+.myInput2:focus{
+  border: #a8a8a800;
+  outline: #a8a8a800;
+}
+.incomplete{
+  height: 40vh;
+  background: #d6d6d6;
+  border-radius: 5px;
+  padding: 10px;
+  overflow-y: scroll;
+}
+.tryAnchor{
+  height: 10px;
+  background: #876fb9;
+  overflow-anchor: auto;
+}
+.completed{
+  height: 40vh;
+  overflow-y: scroll;
+}
+.onHvr{
+  color: #8fd12b;
+  cursor: pointer;
+}
+.onHvrGrey{
+  color: #a599ad;
+  cursor: pointer;
+}
+.onHvr:hover{
+  font-weight: bold;
+}
+.complete{
+  background: #a8a8a8;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.groceryListItm{
+  border: 1px solid #d1d1d1;
+  padding: 15px;
+}
+.groceryListItm p {
+  margin: 0;
+}
+.fruitInp{
+  cursor: text;
+  border: none;
+  outline: none;
+  padding: 2px 10px;
+}
+.fruitInp:hover{
+  background: #b2acbd;
+  border-radius: 5px;
+}
+.myShoppingList{
+  position: absolute;
+  width: 50%;
+  background: #ad9fcc;
+  z-index: 10;
+  top: 0;
+  right: 0;
+}
+.teamNavBar{
+  background: #3e444b;
+  
+}
+.jumbotron{
+  height: 87vh;
+  margin: 0px;
+  padding-top: 20px;
+  background: #fdfdfd;
+}
+.heroLine{
+  width: 60%;
+  border-width: 2px;
+  margin-left: 0px;
+  background: #b2b5b9;
+}
+.menuCard{
+  width: 300px;
+  border: 1px solid  #a5a9adab;
+  border-radius: 5px;
+  padding: 15px;
+  position: absolute;
+  top: 54px;
+  right: 0;
+  background: whitesmoke;
+  z-index: 200;
+}
+.menuItm{
+  padding: 15px;
+  border-radius: 5px;
+}
+.menuItm:hover{
+  background: #ad9fcc;
+  color: white;
+  cursor: pointer;
+}
+.menuItm:hover .link{
+  color: white;
+}
+.link{
+  color: black;
+}
+.link:hover{
+  color: white;
+  text-decoration: none;
+}
+.profileLink{
+  
+}
+.profileLink:hover .prfImgTxt {
+  color:  #f3bf4e;
+}
+a:hover {
+  text-decoration: none;
+}
+.prfImg{
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  border: 3px solid white;
+}
+.prfImg:hover{
+  border-color: #f3bf4e;
+}
+.prfImgTxt{
+  font-size: 1.2rem;
+  margin-top: 10px;
+  color: #bbbbd1;
+  font-weight: 600;
+  text-transform: capitalize;
+  text-decoration: none;
+}
+.profilesPage, .adminsLogInPage{
+  background: #2e2e41;
+  min-height: 100vh;
+  padding: 50px 0px;
+}
+.darkCard{
+  border-radius: 10px;
+  background: #5a5a74;
+  height: 70vh;
+}
+.myProfileImg{
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+}
+.profilImgCntnr{
+  padding: 20px;
+  border-right: 2px solid #bfbfd6;
+}
+.settingsPage{
+  padding: 30px;
+  min-height: 120vh;
+}
+.profileDet{
+  padding: 5px;
+  margin: 0;
+}
+/* .myBtnRnd{
+  cursor: pointer;
+  padding: 5px 20px;
+  border-style: none;
+  color:  #876fb9;
+  border-radius: 30px;
+  border: 2px solid #876fb9;
+} */
+.myEditBtn{
+  width: 80px;
+  cursor: pointer;
+  padding: 5px;
+  border: 2px solid #876fb9;
+  border-radius: 10px;
+}
+.myEditBtn:hover{
+  background: #876fb9;
+  color: white;
+}
+.editHead{
+  text-align: left;
+  width: 125px;
+}
+.dropDnBtn{
+  cursor: pointer;
+  padding: 5px 10px;
+  border: 2px solid #876fb9;
+  border-radius: 5px;
+  margin: 5px;
+}
+
+.myRadio {
+  padding: 15px 3px;
+  cursor: pointer;
+}
+.myRadioActive{
+  padding: 15px 3px;
+  cursor: pointer;
+  color: #876fb9;
+}
+.myRadioOp{
+  padding: 10px 3px;
+}
+.reltv{
+  position: relative;
+}
+.abslt{
+  position: absolute;
+}
+.editMenu{
+  display: none;
+}
+.showEditMenu:hover .editMenu{
+  display: block;
+}
+.delConfWndo{
+position: fixed;
+background: #262641d7;
+padding: 50px;
+top: 0;
+right: 0;
+bottom: 0;
+left: 0;
+z-index: 300;
+}
+.onHvr2{
+  cursor: pointer;
+}
+.onHvr2:hover{
+  background: #a894d1;
+}
+.cursor{
+  cursor: pointer;
+}
+.todayTimeStamp{
+  min-height: 30vh;
+}
+
+.tableWdth{
+  min-width: 125px;
+  /* border: 1px solid #c9c7d6; */
+  border-right: 1px solid #c9c7d6;
+  border-bottom: 1px solid #c9c7d6;
+  padding: 10px;
+  text-align: justify;
+}
+.firstTble{
+  border-left: 1px solid #c9c7d6;
+
+}
+.head{
+  background: #a894d1;
+  font-weight: 500;
+  color: white;
+}
+.hoverNmSh{
+  position: relative;
+}
+.hoverName{
+  min-width: 120px;
+  visibility: hidden;
+  padding: 10px;
+  background: #d1b566;
+  position: absolute;
+  z-index: 300;
+  top: -50px;
+  right: 0;
+  outline: none;
+  border: none;
+  color: white;
+  border-radius: 4px;
+  text-align: center;
+}
+.hoverName:active{
+  outline: none;
+  border: none;
+}
+.hoverName:focus{
+  outline: none;
+  border: none;
+}
+.hoverNmSh:hover .hoverName{
+  visibility: visible;
+}
+.listHeight{
+  padding: 30px 10px;
+  height: 80vh;
+  overflow-y: scroll;
+}
+.bucketsCntnr{
+  width: 100%;
+  background: #938ba0b4;
+  padding: 10px 0;
+}
+.buckets{
+  width: 32%;
+  background: #e6e4e9;
+  padding: 15px;
+  box-shadow: 2px 2px 2px #6b6a70af;
+  border-radius: 5px;
+}
+.bucketTasks{
+  background: #ffffff;
+  padding: 15px;
+  margin: 15px auto;
+  box-shadow: 2px 5px 10px #bab6c4af;
+  border-radius: 5px;
+}
+.buckTaskCnt{
+  background:  #a29caf27;
+  /* padding: 5px; */
+  height: 70vh;
+  overflow-y: hidden;
+}
+.buckTaskCnt:hover{
+  overflow-y: scroll;
+}
+.buckTaskCnt::-webkit-scrollbar{
+  border-radius: 5px;
+  width: 8px;
+  background:  #a29caf27;
+}
+.buckTaskCnt::-webkit-scrollbar-thumb {
+  background: #a894d1; 
+  border-radius: 5px;
+}
+.toDoBtn{
+  width: 15px;
+  height: 15px;
+  border-radius: 10px;
+  box-shadow: 1px 2px 6px #7772816e;
+}
+.toDoBtn:hover{
+  background: #c2afe9; 
+  cursor: pointer;
+  box-shadow: 1px 2px 6px #2a2730b0;
+
 }

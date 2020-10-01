@@ -1,23 +1,25 @@
 import React, {useState, useEffect, useRef } from 'react';
 import {Modal, Button} from 'react-bootstrap'
 import { Link, useParams } from "react-router-dom";
-const userId = localStorage.id
-
+import { Redirect , useHistory } from 'react-router-dom';
 function MyMembers() {
+    const userId = localStorage.id
     const inputPassword = useRef();
-
     const [lgShow, setLgShow] = useState(false);
-    const [ myMember, setMyMember ] = useState({ membName: "", membDesc: "", membPic: "", membRole: "", membSex: "", userId: `${userId}`});
+    const [ myMember, setMyMember ] = useState({ membName: "", membDesc: "", profileImg: "", membRole: "", membSex: "", userId: `${userId}`, timeTrack: ''});
     const [membersList, setMembersList] = useState([]);
-
-
+    const [membersList2, setMembersList2] = useState([]);
+    const [selectedMember, setSelectedMember] = useState({})
+    const [ showModal, setShowModal ] = useState(false)
+    const [ deleteModal, setDeleteModal ] = useState(false)
+    const [ trackerModal, setTrackerModal ] = useState(false)
     function handleInputChange( e ){
         const { id, value } = e.target; 
         setMyMember( { ...myMember, [id]: value } );
         }
     async function loadMembers(){
-        const fetchMember = await fetch (`/api/member/${userId}`).then( res => res.json());
-        console.log('fetched members are: ', fetchMember)
+        const fetchMember = await fetch (`/api/getMember/${userId}`).then( res => res.json());
+        console.log('fetched members are 2: ', fetchMember)
         setMembersList(fetchMember)
     }
     async function submitMember(e){
@@ -36,11 +38,64 @@ function MyMembers() {
             setLgShow(false);
             loadMembers()
     }
-
-    async function deleteMemb(employeeId){
-        console.log('employee id : ', employeeId)
-        // const apiDeleteRole= await fetch(`/api/deleteEmployee/${userId}/${teamId}/${employeeId}`);
+    async function deleteMemb(memberId){
+        console.log('employee id : ', memberId)
+        const deleteMember = await fetch (`/api/deleteMember/${memberId}`).then( res => res.json());
         loadMembers()
+        openModal( '', 'Delete' )
+    }
+    async function trackMember(memberId){
+        // console.log('employee id : ', memberId)
+        const trackMember = await fetch (`/api/trackMember/${memberId}`).then( res => res.json());
+        loadMembers()
+        openModal( '', 'TimeTracker' )
+    }
+    async function cancelMemberTracking(memberId){
+        console.log('employee id : ', memberId)
+        const trackMember = await fetch (`/api/cancelMemberTracking/${memberId}`).then( res => res.json());
+        loadMembers()
+        openModal( '', 'TimeTracker' )
+    }
+    function setTimeTrack(bool){
+        if(bool == true){
+            setMyMember( { ...myMember, timeTrack: true } );
+            return
+        } else {
+            setMyMember( { ...myMember, timeTrack: false } );
+            return
+        }
+    }
+    function openModal(member, type){
+        console.log('member: ', member)
+        if(type == 'Delete'){
+            if(showModal==false){
+                setShowModal(true)
+                setDeleteModal(true)
+                setSelectedMember(member);
+                return
+            }else{
+                setShowModal(false)
+                setDeleteModal(false)
+                setSelectedMember({});
+                return
+            }
+        }
+        if(type == 'TimeTracker'){
+            if(showModal==false){
+                setShowModal(true)
+                setTrackerModal(true)
+                setSelectedMember(member);
+                return
+            }else{
+                setShowModal(false)
+                setTrackerModal(false)
+                setSelectedMember({});
+                return
+            }
+        }
+    }
+    function showSomething (idx){
+        console.log('idx: ', idx)
     }
     useEffect(function(){
         loadMembers()
@@ -50,6 +105,44 @@ function MyMembers() {
 
     return (
         <div>
+            { userId ? '' : <Redirect to='/welcomePage'/>}
+            {showModal == true ? <div className="delConfWndo">
+                <div className="card">
+                    { deleteModal == true ? 
+                    <div className="card-body col-10 mx-auto text-center">
+                        <img src={selectedMember ? selectedMember.profileImg : ''} alt="" class="empAvatar mx-auto"/>
+                        <h3>{selectedMember ? selectedMember.name : ''}</h3>
+                        <h4>Are you sure You would like to delete member?</h4>
+                        <div className="d-flex mx-auto col-6">
+                            <div class="col-5 btn myBtn mx-auto" onClick={()=>openModal(selectedMember._id,'Delete')}>Cancel</div>
+                            <div class="col-5 btn myBtn mx-auto"onClick={()=>deleteMemb(selectedMember._id)}>Yes</div>
+                        </div>
+                    </div>
+                    : ''}
+                    { trackerModal == true ? 
+                    <div className="card-body col-10 mx-auto text-center">
+                        <img src={selectedMember ? selectedMember.profileImg : ''} alt="" class="empAvatar mx-auto"/>
+                        <h3>{selectedMember ? selectedMember.name : ''}</h3>
+                        {selectedMember.timeTrack === false ?
+                        <div>
+                            <h4>Are you sure You would like to track this member?</h4>
+                            <div className="d-flex mx-auto col-6">
+                                <div class="col-5 btn myBtn mx-auto" onClick={()=>openModal(selectedMember._id,'TimeTracker')}>Cancel</div>
+                                <div class="col-5 btn myBtn mx-auto"onClick={()=>trackMember(selectedMember._id)}>Yes</div>
+                            </div>
+                        </div> :
+                        <div>
+                            <h4>Are you sure You want to cancel tracking for this member?</h4>
+                            <div className="d-flex mx-auto col-6">
+                                <div class="col-5 btn myBtn mx-auto" onClick={()=>openModal(selectedMember._id,'TimeTracker')}>Cancel</div>
+                                <div class="col-5 btn myBtn mx-auto"onClick={()=>cancelMemberTracking(selectedMember._id)}>Yes</div>
+                            </div>
+                        </div> 
+                        }
+                    </div>
+                    : ''}
+                </div>
+            </div> : ''}
             <div className="border mb-4">
                 <Button onClick={() => setLgShow(true)}>Add Member</Button>
                 <Modal
@@ -64,18 +157,31 @@ function MyMembers() {
                     <Modal.Body>
                         <form>
                             <div class="form-group">
-                                <label for="membName">Add Member</label>
+                                <label for="membName">Member Name</label>
                                 <input type="text" class="form-control" 
                                 id="membName" aria-describedby="taskHelp" onChange={handleInputChange} 
                                 value={myMember.membName}/>
-                                <label for="membDesc">Example textarea</label>
-                                <textarea class="form-control" id="membDesc" rows="3" value={myMember.membDesc} onChange={handleInputChange}></textarea>
-                                <label for="membPic">Enter Image Url</label>
-                                <textarea class="form-control" id="membPic" rows="3" value={myMember.membPic} onChange={handleInputChange}></textarea>
+                                <label for="profileImg">Image Url</label>
+                                <input type="text" class="form-control" 
+                                id="profileImg" aria-describedby="taskHelp" onChange={handleInputChange} 
+                                value={myMember.profileImg}/>
                                 <label for="membRole">role</label>
                                 <input type="text" class="form-control" 
                                 id="membRole" aria-describedby="taskHelp" onChange={handleInputChange} 
                                 value={myMember.membRole}/>
+                                <div className="form-group mt-2">
+                                    <label for="membSex">Add Time Tracker</label>
+                                    <div className="d-flex">
+                                        <div className="d-flex  col-1 mr-2">
+                                            {myMember.timeTrack === true ?<i class="fas fa-circle myRadioActive"></i> : <i class="far fa-circle myRadio" onClick={()=>setTimeTrack(true)}></i>}
+                                            <p className="myRadioOp">Yes</p>
+                                        </div>
+                                        <div className="d-flex col-1">
+                                            {myMember.timeTrack === false ?<i class="fas fa-circle myRadioActive"></i> : <i class="far fa-circle myRadio"  onClick={()=>setTimeTrack(false)}></i>}
+                                            <p className="myRadioOp">No</p>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="form-group col-md-4">
                                     <label for="membSex">Select Sex</label>
                                     <select 
@@ -93,30 +199,42 @@ function MyMembers() {
                     </Modal.Body>
                 </Modal>
             </div>
-            <div show={false}>
-                something
-            </div>
             <div className="border">
                 <div className="row container mx-auto">
                 {membersList.length == 0 ? 
                 <h4 class="mt-5 mx-auto">You have not added any members yet</h4>
-                : membersList.map( member=>
+                : membersList.map( (member, idx)=>
                     <div class="card myCard mx-auto">
-                        <div className="mb-2 mt-2 mr-2 d-flex justify-content-end">
-                            <i class="far fa-times-circle" onClick={()=>deleteMemb(member._id)}></i>
+                        <div className="d-flex justify-content-between ">
+                        {/* <i class="fas fa-stopwatch"></i> */}
+                        {member.timeTrack == true ? <i class="mb-2 mt-3 ml-3 fas fa-stopwatch" style={{fontSize: '1.5rem', color: "#a894d1"}}></i> : 
+                        <i class="mb-2 mt-3 ml-3 fas fa-stopwatch" style={{fontSize: '1.5rem', color: "#a894d100"}}></i>
+                        }
+                            <div className="col-2 mb-2 mt-2 mr-2 relative showEditMenu border cursor" >
+                                {/* <i class="far fa-times-circle" onClick={()=>deleteMemb(member._id)}></i> */}
+                                <i class="fas fa-2x fa-caret-down pr-3 cursor"></i>
+                                <div className="abslt" style={{width: '250px',top: "32px", right: "0px", zIndex: '200'}}>
+                                    <ul class="list-group card editMenu" style={{padding: '10px'}}>
+                                        {member.timeTrack == false ?
+                                        <li class="list-group-item onHvr2" onClick={()=>openModal(member, 'TimeTracker')}>Add Time Tracker</li>:
+                                        <li class="list-group-item onHvr2" onClick={()=>openModal(member, 'TimeTracker')}>Cancel Time Tracker</li>
+                                    }
+                                        <li class="list-group-item onHvr2" onClick={()=>openModal(member, 'Delete')}>Delete Member</li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <img src={member.membPic} alt="" class="empAvatar"/>
-                            <h5 class="card-title">{member.membName}</h5>
+                        <div class="card-body mx-auto text-center">
+                            <img src={member.profileImg} alt="" class="empAvatar"/>
+                            <h5 class="card-title">{member.name}</h5>
                             <p class="card-text">{member.membRole}</p>
-                            <Link to={`/MemberProfile/${member._id}/${member.membName}`} >
+                            <Link to={`/AdminsProfile/MemberProfile/${member._id}/${member.name}`} >
                                 <div class="btn myBtn" href="#" role="button">view Detail </div>
                             </Link>
                         </div>
                     </div>
                 )}
                 </div>
-
             </div>
         </div>
     )

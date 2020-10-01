@@ -1,43 +1,39 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-
 let houseMembers = new Schema (
-    {
+    {   
+        adminId: { 
+            type: String,
+        },
         name : { 
             type: String,
-            trim: true,
-            required: true
         },
-        email : { 
-            type: String, 
-            required: true, 
-            trim: true, 
-            match: [/.+@.+\..+/, 'Please enter a valid e-mail address'] 
+        timeTrack:{
+            type: Boolean,
+            default: false
         },
-        password :  { 
-            type: String, 
-            required: true, 
-            trim: true
-        },
+        timeLogIns:[
+            {   
+                present:{ type: Boolean, default: false },
+                loggedOut:{ type: Boolean, default: false },
+                date: String,
+                logInDay: { type: Date, default: Date.now },
+                logInTime: { type: Date, default: Date.now },
+                logOutTime: { type: Date },
+            }
+        ],
         profileImg: {
             type: String,
             default: 'https://getdrawings.com/free-icon-bw/anonymous-avatar-icon-19.png'  
         },
-        membDesc: {type: String},
         membRole: {type: String},
         membSex: {type: String},
         membPersonalTasks: [
             {
-                membTaskId: {type: String},
-                membTask: {type: String},
-                membTaskType: {type: String},
-            }
-        ],
-        membBuckets: [
-            {
-                membBucketName: {type: String},
-                membTask: {type: String},
-                membTaskType: {type: String},
+                Task: {type: String},
+                taskDone: {
+                    type: Boolean, 
+                    default: false}
             }
         ],
     },

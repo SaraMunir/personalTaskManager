@@ -1,0 +1,22 @@
+[
+    {
+        "id": "01",
+        "category": "fruits",
+        "list_item": ["apple","avocado","banana","cantalope","cherries","cucumber","honey dew ","lime","mango","orange","pineapple","strawberries","tomatoes ","watermelon"]
+    },
+    {
+        "id": "02",
+        "category": "vegetables",
+        "list_item": ["Broccoli","BrusselSprouts","Carrots","Cauliflower","Cilantro","Corn","Garlic","Ginger","Green Pepper","Kale","Lettuce","Mushroom","Parsley","Potatoes","Red Onions","Red Pepper","Red Potatoes","Shallots","Spinach","Sweet Potatoes","Vegetables","yellow Onions","Zucchinni"]
+    },
+    {
+        "id": "03",
+        "category": "pantry",
+        "list_item": ["Avocado Oil","Baking powder","Baking Soda","Basmatti Rice","Black Beans","Bread","Brown Rice","Chicken broth","Chicken Stock","Chickpeas","Chocolate Ghee","Coconut milk","Coffee","Corn starch","Flour","Ghee ","Honey","Mixed Rice","Oatmeal","Olive Oil","Peanut Butter","Vanilla Extract","Vegetable Oil","White Beans"]
+    },
+    {
+        "id": "04",
+        "category": "spices",
+        "list_item": ["Chili powder","Corriander","Garlic Powder","Ginger Powder","Hot sauce","Onion Powder","Paprika","Pepper","Salt","Turmeric"]
+    }
+]

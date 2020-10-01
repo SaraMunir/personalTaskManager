@@ -3,11 +3,17 @@ const Schema = mongoose.Schema;
 
 let users = new Schema (
     {
+        name : { 
+            type: String,
+            trim: true,
+            required: true
+        },
         firstName : { 
             type: String,
             trim: true,
             required: true
         },
+        passCode: {type: String},
         lastName : { 
             type: String,
             trim: true,
@@ -52,50 +58,6 @@ let users = new Schema (
                     default: false}
             }
         ],
-        myHouseMembers: [
-            { 
-                memberId: {type: String},
-                membName: {type: String},
-                membDesc: {type: String},
-                membRole: {type: String},
-                membSex: {type: String},
-                membPic: {type: String},
-                membPersonalTasks: [
-                    {
-                        membTaskId: {type: String},
-                        membTask: {type: String},
-                        membTaskType: {type: String},
-                    }
-                ],
-                membBuckets: [
-                    {
-                        membBucketName: {type: String},
-                        membTask: {type: String},
-                        membTaskType: {type: String},
-                    }
-                ]
-            }
-        ],
-        myEmployee: [
-            { 
-                employeeId: {type: String},
-                employeeName: {type: String},
-                employeeRole: {type: String},
-                employeeLogIns: [
-                    {
-                        loginDate: {type: String},
-                        loginTime: {type: String},
-                        logoutTime: {type: String}
-                    }
-                ], 
-                employeeTasks: [
-                    {
-                        empTaskId: {type: String},
-                        empTask: {type: String},
-                    }
-                ]
-            }
-        ],
         myBackLog: [
             { 
                 taskName: {type: String},
@@ -109,26 +71,9 @@ let users = new Schema (
                 }
             }
         ],
-        myBucket: [
+        myDashboarBuckets:[
             {
-                bucketName: {type: String},
-                bucketOwner: {type: String},
-                bucketOwnerId: {type: String},
-                bucketTasks: [
-                    {
-                        taskName:{type: String},
-                        taskOwner:{type: String},
-                        taskOwnerId:{type: String},
-                        complete : {
-                            type: Boolean, 
-                            default: false
-                        }
-                    }
-                ],
-                active: {
-                    type: Boolean, 
-                    default: false
-                }
+                bucketId: String
             }
         ]
     },

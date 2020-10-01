@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import {Modal, Button} from 'react-bootstrap';
-
+import { Redirect , useHistory } from 'react-router-dom';
+import Buckets from './Buckets/Buckets'
 function BackLog() {
     const [lgShow, setLgShow] = useState(false);
     const [lgShow2, setLgShow2] = useState(false);
@@ -11,7 +12,6 @@ function BackLog() {
     const [memberList, setMemberList] = useState([]);
     const [bucketTaskList, setBucketTaskList] = useState([]);
     const [bucketCmpTaskList, setBucketCmpTaskList] = useState([]);
-
     const [ dropDown, setDropDown ] = useState( { type: ""} );
     const [ showSome, setShowSome ] = useState( { type: ""} );
 
@@ -39,8 +39,6 @@ function BackLog() {
         LoadAllList();
     }
 
-    // list._id, list.taskName, list.taskType, bucket._id
-    // list._id, list.taskName, list.taskType, list.taskOwner,list.taskOwnerId, bucket._id
     async function moveTask(backlogId, taskName, taskType, taskOwner,taskOwnerId, bucketId){
         console.log('is it working?')
         let listObj = {
@@ -51,7 +49,7 @@ function BackLog() {
             taskOwnerId: taskOwnerId,
             userId: localStorage.id 
         }
-        if(taskType == "Recurring"){
+        if(taskType === "Recurring"){
             console.log('do nothing')
             const addBacklogTaskNotDelete = await fetch(`/api/bucketTaskList/Recurring`, 
                 {   method: 'post', 
@@ -62,6 +60,7 @@ function BackLog() {
                     body: JSON.stringify(listObj)
                 }).then( result => result.json());
                 LoadAllList();
+                loadBuckets();
             return
         } else {
             const addBacklogTask = await fetch(`/api/bucketTaskList`, 
@@ -73,11 +72,11 @@ function BackLog() {
                     body: JSON.stringify(listObj)
                 }).then( result => result.json());
                 LoadAllList();
+                loadBuckets();
+
         }
         
     }
-
-    // list._id, list.taskName, member._id, member.membName
     async function assignOwner(taskId, taskName, membId, membName){
         console.log(membName);
         let taskObj = {
@@ -96,19 +95,20 @@ function BackLog() {
                     body: JSON.stringify(taskObj)
                 }).then( result => result.json());
                 LoadAllList();
+                loadMembersList()
+
     }
     async function changeStatus(bucketId, activeStatus){
         console.log('changing status to active: ', bucketId);
         console.log('changing status to active: ', activeStatus);
-        if(activeStatus == false ){
+        if(activeStatus === false ){
             const fetchChangeStatus = await fetch (`/api/bucketActiveList/${userId}/${bucketId}`).then( res => res.json());
         } else {
             const changeStatusToFalse = await fetch (`/api/bucketActivetoFalse/${userId}/${bucketId}`).then( res => res.json());
         }
-        LoadAllList()
+        LoadAllList();
+        loadBuckets();
     }
-
-    //bucket._id, task._id
     async function completeTask(bucketId, bucketTaskId){
         let completeObj = {
             bucketId: bucketId, 
@@ -126,6 +126,7 @@ function BackLog() {
                 body: JSON.stringify(completeObj)
             }).then( result => result.json());
             LoadAllList();
+            loadBuckets()
     }
     async function createBucket(e){
         e.preventDefault();
@@ -141,39 +142,30 @@ function BackLog() {
         setBucket({ task: "", completionDate: "", userId: localStorage.id });
         setLgShow2(false);
         LoadAllList();
+        loadBuckets();
     }
     async function LoadAllList(){
-        // console.log('loading doList');
         const fetchBacklogList = await fetch (`/api/backlogList/${userId}`).then( res => res.json());
-        console.log('fetched BacklogList: ', fetchBacklogList.myBackLog)
-        console.log('fetched MemberList: ', fetchBacklogList.myHouseMembers)
-        console.log('fetched Bucket List: ', fetchBacklogList.myBucket)
-        
-        // fetchBacklogList.myBucket.map(Bucket=>{
-        //     bucket.bucketTasks.sort((a, b) => (a.complete - b.complete))
-        // })
-
         setBacklogList(fetchBacklogList.myBackLog);
-        setMemberList(fetchBacklogList.myHouseMembers);
-        setBucketList(fetchBacklogList.myBucket);
-
-
     }
-    function showSomethign(){
-        console.log('somethign to be shown?');
-        if(dropDown.type==''){
-            setDropDown( { type: 'myMenu', message: 'friend already exist in your list!' } )
-        } else {
-            setDropDown( { type: '', message: '' } )
-        }
+    async function loadMembersList(){
+        const fetchMember2 = await fetch (`/api/getMember/${userId}`).then( res => res.json());
+        setMemberList(fetchMember2);
+    }
+    async function loadBuckets(){
+        const fetchBucketList = await fetch (`/api/getBuckets/${userId}`).then( res => res.json());
+        console.log("fetchBucketList: ",fetchBucketList)
+        setBucketList(fetchBucketList)
     }
     useEffect( function(){
-        // loadT ask();
+        loadMembersList()
         LoadAllList();
+        loadBuckets();
     }, []);
     return (
         <div class="container-fluid mainBox">
-            <div className="darkPurpleSection">
+            { !userId ? <Redirect to='/welcomePage' /> : ''}
+            <div className="">
                 <div className="pt-4 pb-4">
                     <div className="d-flex justify-content-between">
                         <h3>Backlog List</h3>
@@ -212,118 +204,133 @@ function BackLog() {
                                 <button type="submit" class="btn btn-primary" onClick={createBackLogTask}>Submit</button>
                             </form>
                         </Modal.Body>
-                        </Modal>
-                    <div className="backLogList">
-                        <div className="recurringList newCardLg">
+                    </Modal>
+                    <div className="backLogList row">
+                        <div className="recurringList newCardLg col-lg-6 mx-auto">
                             <h4>Recurring List</h4>
-                            {backlogList.map(list => 
-                                list.taskType == "Recurring" ?<div class="list-group-item">
-                                    <div className="d-flex">
-                                        <p class="col-8">{list.taskName}</p>
-                                        <div className="col-4 d-flex">
-                                            <div className="col-3">
-                                                {memberList.map( memb => 
-                                                    memb._id == list.taskOwnerId ? <img class="membThmSmall"src={memb.membPic} alt=""/> : '')}
-                                            </div>
-                                            <div className="col-9 d-flex">
-                                                <div className="Assign mr-1">
-                                                    <div class="dropdown">
-                                                        <button class="myBtn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Assign to
-                                                        </button>
-                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                            {memberList.length == 0 ?
-                                                            <div class="dropdown-item">there is nothing to add?</div> :
-                                                            memberList.map( member =>
-                                                                <div class="dropdown-item"  onClick={()=>assignOwner(list._id, list.taskName, member._id, member.membName)}>{member.membName}  
-                                                                <div class="dropdown-divider"></div>
-                                                                </div>
-                                                                )}
+                            <div className="listHeight">
+                                {backlogList.map((list, idx) => 
+                                    list.taskType === "Recurring" ?
+                                    <div key={`lists-${idx}`} class="list-group-item">
+                                        <div className="d-flex">
+                                            <p class="col-8">{list.taskName}</p>
+                                            <div className="col-4 d-flex">
+                                                <div className="col-5">
+                                                    {memberList.map( (memb, idx) => 
+                                                        memb._id === list.taskOwnerId ? 
+                                                        <div className="hoverNmSh">
+                                                            <img key={`membS-${idx}`} class="membThmSmall"src={memb.profileImg} alt=""/>
+                                                            <span className="hoverName">{memb.name} </span>
+                                                        </div>
+                                                        : '')}
+                                                </div>
+                                                <div className="d-flex">
+                                                    <div className="Assign mr-1">
+                                                        <div class="dropdown">
+                                                            <div class="hoverNmSh myBtn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">      <i class="fas       fa-user-tag"></i>
+                                                                <span className="hoverName">Assign Member</span>
+                                                            </div>
+                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                                {memberList.length === 0 ?
+                                                                <div class="dropdown-item">there is nothing to add?</div> :
+                                                                memberList.map( (member, idx) =>
+                                                                    <div 
+                                                                    key={`mebs-${idx}`} class="dropdown-item"  onClick={()=>assignOwner(list._id, list.taskName, member._id, member.name)}>{member.name}  
+                                                                    <div class="dropdown-divider"></div>
+                                                                    </div>
+                                                                    )}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="MoveTo">
+                                                        <div class="dropdown">
+                                                            <div class="hoverNmSh myBtn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">  <i class="fas fa-arrow-alt-circle-right"></i>
+                                                            <span className="hoverName">Move to</span>
+                                                            </div>
+                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                                {bucketList.length === 0 ?
+                                                                <div class="dropdown-item">there is nothing to add?</div> :
+                                                                bucketList.map( (bucket, idx) =>
+                                                                    <div 
+                                                                    key={`buckets2-${idx}`} class="dropdown-item"  onClick={()=>moveTask(list._id, 
+                                                                    list.taskName, list.taskType, list.taskOwner,list.taskOwnerId, bucket._id)}>{bucket.bucketName}  
+                                                                    <div class="dropdown-divider"></div>
+                                                                    </div>
+                                                                    )}
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div className="MoveTo">
-                                                    <div class="dropdown">
-                                                        <button class="myBtn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Move to
-                                                        </button>
-                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                            {bucketList.length == 0 ?
-                                                            <div class="dropdown-item">there is nothing to add?</div> :
-                                                            bucketList.map( bucket =>
-                                                                <div class="dropdown-item"  onClick={()=>moveTask(list._id, 
-                                                                list.taskName, list.taskType, list.taskOwner,list.taskOwnerId, bucket._id)}>{bucket.bucketName}  
-                                                                <div class="dropdown-divider"></div>
-                                                                </div>
-                                                                )}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                
                                             </div>
                                         </div>
                                     </div>
-                                </div>:
-                                '')}
+                                    : '')}
+                            </div>
                         </div>
-                        <div className="adhocList myCardLg">
+                        <div className="adhocList myCardLg col-lg-6 mx-auto">
                             <h4>Adhoc List</h4>
-                            {backlogList.map(list => 
-                                list.taskType == "Adhoc" ?<div class="list-group-item">
-                                    <div className="d-flex">
-                                    <p class="col-8">{list.taskName}</p>
-                                    <div className="col-4 d-flex">
-                                        <div className="col-3">
-                                            {memberList.map( memb => 
-                                                memb._id == list.taskOwnerId ? <img class="membThmSmall"src={memb.membPic} alt=""/> : '')}
+                            <div className="listHeight">
+                                {backlogList.map((list, idx) => 
+                                    list.taskType == "Adhoc" ?
+                                    <div key={`lists-${idx}`} class="list-group-item">
+                                        <div className="d-flex">
+                                            <p class="col-8">{list.taskName}</p>
+                                            <div className="col-4 d-flex">
+                                                <div className="col-5">
+                                                    {memberList.map( (memb, idx) => 
+                                                        memb._id === list.taskOwnerId ? 
+                                                        <div className="hoverNmSh">
+                                                            <img key={`membS-${idx}`} class="membThmSmall"src={memb.profileImg} alt=""/>
+                                                            <span className="hoverName">{memb.name} </span>
+                                                        </div>
+                                                        : '')}
+                                                </div>
+                                                <div className="d-flex">
+                                                    <div className="Assign mr-1">
+                                                        <div class="dropdown">
+                                                            <div class="hoverNmSh myBtn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">      <i class="fas       fa-user-tag"></i>
+                                                                <span className="hoverName">Assign Member</span>
+                                                            </div>
+                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                                {memberList.length === 0 ?
+                                                                <div class="dropdown-item">there is nothing to add?</div> :
+                                                                memberList.map( (member, idx) =>
+                                                                    <div 
+                                                                    key={`mebs-${idx}`} class="dropdown-item"  onClick={()=>assignOwner(list._id, list.taskName, member._id, member.name)}>{member.name}  
+                                                                    <div class="dropdown-divider"></div>
+                                                                    </div>
+                                                                    )}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="MoveTo">
+                                                        <div class="dropdown">
+                                                            <div class="hoverNmSh myBtn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">  <i class="fas fa-arrow-alt-circle-right"></i>
+                                                            <span className="hoverName">Move to</span>
+                                                            </div>
+                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                                {bucketList.length === 0 ?
+                                                                <div class="dropdown-item">there is nothing to add?</div> :
+                                                                bucketList.map( (bucket, idx) =>
+                                                                    <div 
+                                                                    key={`buckets2-${idx}`} class="dropdown-item"  onClick={()=>moveTask(list._id, 
+                                                                    list.taskName, list.taskType, list.taskOwner,list.taskOwnerId, bucket._id)}>{bucket.bucketName}  
+                                                                    <div class="dropdown-divider"></div>
+                                                                    </div>
+                                                                    )}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div className="col-9 d-flex">
-                                            <div className="Assign mr-1">
-                                                <div class="dropdown">
-                                                    <button class="myBtn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Assign to
-                                                    </button>
-                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                        {memberList.length == 0 ?
-                                                        <div class="dropdown-item">there is nothing to add?</div> :
-                                                        memberList.map( member =>
-                                                            <div class="dropdown-item"  onClick={()=>assignOwner(list._id, list.taskName, member._id, member.membName)}>{member.membName}  
-                                                            <div class="dropdown-divider"></div>
-                                                            </div>
-                                                            )}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="MoveTo">
-                                                <div class="dropdown">
-                                                    <button class="myBtn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Move to
-                                                    </button>
-                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                        {bucketList.length == 0 ?
-                                                        <div class="dropdown-item">there is nothing to add?</div> :
-                                                        bucketList.map( bucket =>
-                                                            <div class="dropdown-item"  onClick={()=>moveTask(list._id,
-                                                            list.taskName, 
-                                                            list.taskType, 
-                                                            list.taskOwner,
-                                                            list.taskOwnerId, bucket._id)}>{bucket.bucketName}  
-                                                            <div class="dropdown-divider"></div>
-                                                            </div>
-                                                            )}
-                                                    </div>
-                                                </div>
-                                            </div>
+                                    </div>
+                                    :
+                                    '')}
 
-                                        </div>
-                                    </div>
-                                    </div>
-                                </div>:
-                                '')}
+                            </div>
                         </div>
-                        <div className="myDropDown">
-                            <div className="myBtn col-3" onClick={showSomethign}>Trial button</div>
-                            <div class={ dropDown.type ? `${dropDown.type} col-3` : 'hide' }>
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. At dolorum a dicta vero veniam soluta 
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. At dolorum a dicta vero veniam soluta 
-                            </div> 
-                        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -351,8 +358,8 @@ function BackLog() {
                                     id="bucketOwnerId" class="form-control" value={bucket.bucketOwnerId} 
                                     onChange={handleInputChange} >
                                         <option selected>Choose...</option>
-                                        {memberList.map( member => 
-                                        <option value={member._id}>{member.membName}</option>
+                                        {memberList.map( (member, idx) => 
+                                        <option key={`opti-${idx}`} value={member._id}>{member.name}</option>
                                         )}
                                     </select>
                                 </div>
@@ -360,64 +367,7 @@ function BackLog() {
                             </form>
                         </Modal.Body>
                     </Modal>
-                    <div className="buckets row mx-auto">
-                        {bucketList.map( bucket=>
-                            <div class="card bucket" >
-                                <div class="card-body cardTitle">
-                                    <div className="d-flex justify-content-end">
-                                        {bucket.active == false ? <i class="fas fa-circle grey" onClick={()=>changeStatus(bucket._id, bucket.active)}></i> : <i class="fas fa-circle green" onClick={()=>changeStatus(bucket._id, bucket.active)}></i>}
-                                    </div>
-                                    <h5 class="card-title ">{bucket.bucketName}</h5>
-                                </div>
-                                <ul class=" list-group list-group-flush">
-                                    <div className="incomplete">
-                                        {
-                                            bucket.bucketTasks.map(bcktTask =>
-                                                bcktTask.complete == false ? 
-                                                <div class="myList d-flex" >
-                                                    <div className="col-9 ">
-                                                    {bcktTask.taskName}
-                                                    </div>
-                                                    <div className="col-3 d-flex justify-content-around">
-                                                        <div className="col-10 mr-1">
-                                                        {memberList.map( memb => 
-                                                            memb._id == bcktTask.taskOwnerId ? <img class="membThmSmall"src={memb.membPic} alt=""/> : '')}
-                                                        </div>
-                                                        <div className="col-2">
-                                                            <i class="far fa-circle green" onClick={()=>completeTask(bucket._id, bcktTask._id)}></i>
-                                                        </div>
-                                                    </div>
-                                                </div> :
-                                                ''
-                                            )
-                                        }
-                                    </div>
-                                    <div className="completed">
-                                        {
-                                            bucket.bucketTasks.map(bcktTask =>
-                                                bcktTask.complete == true ? 
-                                            <div class="myListDone d-flex" >
-                                                <div className="col-9 ">{bcktTask.taskName}
-                                                </div>
-                                                <div className="col-3 d-flex justify-content-around">
-                                                    <div className="col-10 mr-1">
-                                                    {memberList.map( memb => 
-                                                        memb._id == bcktTask.taskOwnerId ? <img class="membThmSmallDisabled"src={memb.membPic} alt=""/> : '')}
-                                                    </div>
-                                                    <div className="col-2">
-                                                        <i class="fas fa-check-circle " ></i>
-                                                    </div>
-                                                </div>
-                                            </div> :
-                                                ''
-                                            )
-                                        }
-                                        
-                                    </div>
-                                </ul>
-                            </div>
-                        )}
-                    </div>
+                    <Buckets bucketList={bucketList} changeStatus={changeStatus} completeTask={completeTask} memberList={memberList}/>
                 </div>
             </div>
         </div>

@@ -6,13 +6,12 @@ const orm = require( './db/orm.mongoose' );
 
 const PORT = process.env.PORT || 8080;
 const app = express();
-
+ 
 var server = app.listen( PORT, function(){ console.log( `[MyFamilyTask], http://localhost:${PORT}` ); });
 // app.use( express.static('client/build/') );
 app.use(express.static(path.join(__dirname, "client/src/components/Grocery")));
 app.use( express.urlencoded({ extended: false }) );
 app.use( express.json() );
-
 app.use(express.static(path.join(__dirname, "client/src/components/assets")));
 //Registration: 
 app.post('/api/user/registration', async function( req,res ){
@@ -21,21 +20,24 @@ app.post('/api/user/registration', async function( req,res ){
     const registerResult = await orm.registerUser( userData );
     res.send(registerResult);
 })
-
 //Login
 app.post('/api/user/login', async function( req,res ){
-
-    console.log('in server is login working')
-
+    // console.log('in server is login working')
     const userData = req.body;
     const loginResult = await orm.loginUser( userData.email, userData.password );
     loginResult.rememberMe = req.body.rememberMe;
     res.send( loginResult );
 });
+//Login
+app.post('/api/user/passCode', async function( req,res ){
+    console.log('in server is login working')
+    const userData = req.body;
+    const loginPassCode = await orm.loginPassCode( userData.passCode, userData.userId );
+    res.send( loginPassCode );
+});
 
 app.post('/api/addTask', async function( req,res ){
     // const userId = req.params.userId;
-    console.log('in server why is it not working second time', req.body)
     const userTasks = req.body;
     const postTasks = await orm.postTasks( userTasks);
     res.send(postTasks);
@@ -51,6 +53,12 @@ app.post('/api/addBucket', async function( req,res ){
     const userTasks = req.body;
     const postBucket = await orm.postBucket( userTasks);
     res.send(postBucket);
+})
+//get buckets
+app.get('/api/getBuckets/:userId', async function( req,res ){
+    const userId = req.params.userId;
+    const getBuckets = await orm.getBuckets( userId );
+    res.send(getBuckets);
 })
 app.post('/api/addMembersBucket', async function( req,res ){
     // const userId = req.params.userId;
@@ -68,21 +76,20 @@ app.get('/api/bucketActiveList/:userId/:bucketId', async function( req,res ){
     const userId = req.params.userId;
     const bucketId = req.params.bucketId;
     // const userTasks = req.body;
-    const bucketStatus = await orm.bucketStatus( userId, bucketId );
+    const bucketStatus = await orm.bucketStatus( bucketId );
     res.send(bucketStatus);
 })
-app.get('/api/memberBuckets/:userId/:memberId', async function( req,res ){
-    const userId = req.params.userId;
+app.get('/api/memberBuckets/:memberId', async function( req,res ){
     const memberId = req.params.memberId;
     // const userTasks = req.body;
-    const memberBucket = await orm.memberBucket( userId, memberId );
+    const memberBucket = await orm.memberBucket( memberId );
     res.send(memberBucket);
 })
 app.get('/api/bucketActivetoFalse/:userId/:bucketId', async function( req,res ){
     const userId = req.params.userId;
     const bucketId = req.params.bucketId;
     // const userTasks = req.body;
-    const bucketStatus = await orm.bucketStatusToFalse( userId, bucketId );
+    const bucketStatus = await orm.bucketStatusToFalse( bucketId );
     res.send(bucketStatus);
 })
 
@@ -105,7 +112,6 @@ app.get('/api/userInfo/:userId', async (req,res)=>{
 //creating members
 app.post('/api/member', async function( req,res ){
     const userEmployee = req.body;
-    // console.log('in server:', userEmployee)
     const postMember = await orm.postMember( userEmployee );
     res.send(postMember);
 })
@@ -131,9 +137,40 @@ app.get('/api/member/:userId', async (req,res)=>{
     const fetchMemberList = await orm.getMemberList(userId);
     res.json(fetchMemberList);
 })
-
-
-
+//DELETE MEMBER
+app.get('/api/deleteMember/:memberId', async (req,res)=>{
+    const memberId = req.params.memberId;
+    const deleteMember = await orm.deleteMember(memberId);
+    res.json(deleteMember);
+})
+//track MEMBER
+app.get('/api/trackMember/:memberId', async (req,res)=>{
+    const memberId = req.params.memberId;
+    const trackMember = await orm.trackMember(memberId);
+    res.json(trackMember);
+})
+//cancelMemberTracking
+app.get('/api/cancelMemberTracking/:memberId', async (req,res)=>{
+    const memberId = req.params.memberId;
+    const cancelTrackMember = await orm.cancelTrackMember(memberId);
+    res.json(cancelTrackMember);
+})
+app.get('/api/getMember/:userId', async (req,res)=>{
+    const userId = req.params.userId;
+    const fetchMemberList2 = await orm.getMemberList2(userId);
+    res.json(fetchMemberList2);
+})
+app.get('/api/memberDetail/:membId', async (req,res)=>{
+    const membId = req.params.membId;
+    const fetchMembersDetail = await orm.getMemberDetail(membId);
+    res.json(fetchMembersDetail);
+})
+app.post('/api/addPersonaltsk/:membId', async function( req,res ){
+    const membId = req.params.membId;
+    const PersnltaskObj = req.body;
+    const postPersonalTsk = await orm.postPersonalTsk( PersnltaskObj, membId );
+    res.send(postPersonalTsk);
+})
 app.get('/api/doList/:userId', async (req,res)=>{
     const userId = req.params.userId;
     const fetchDoList = await orm.getDoLists(userId);
@@ -167,3 +204,44 @@ app.put("/api/moveToDone/:userId/:taskId", async (req, res) => {
     });
 
 //   /api/moveToDoing/${userId}/${taskId}
+
+
+
+/////moving task from do to doing:
+app.put("/api/completePrsnlTsk/:memberId/:prsnlTskId", async (req, res) => {
+    const memberId = req.params.memberId;
+    const prsnlTskId = req.params.prsnlTskId;
+    const completePrsnlTsk = await orm.completePrsnlTsk(memberId, prsnlTskId);
+    res.send(completePrsnlTsk);
+    });
+
+
+//updating admin passcode:
+// /api/updateAdminPassCode/
+
+app.put("/api/updateAdminPassCode/:userId", async (req, res) => {
+    const passWordData = req.body;
+    const userId = req.params.userId;
+    const updatePassCode = await orm.updatePassCode(userId, passWordData);
+    res.send(updatePassCode);
+    });
+//add to dashboard
+app.put("/api/addToDashboard/:userId", async (req, res) => {
+    const bucketId = req.body;
+    const userId = req.params.userId;
+    const addBucketToDashboard = await orm.addBucketToDashboard(userId, bucketId);
+    res.send(addBucketToDashboard);
+    });
+
+app.put("/api/logMemberIn/:membId", async (req, res) => {
+    const logInData = req.body;
+    const membId = req.params.membId;
+    const logMemberIn = await orm.logMemberIn(membId, logInData);
+    res.send(logMemberIn);
+    });
+app.put("/api/logMemberOut/:membId", async (req, res) => {
+    const logOutData = req.body;
+    const membId = req.params.membId;
+    const logMemberOut = await orm.logMemberOut(membId, logOutData);
+    res.send(logMemberOut);
+    });

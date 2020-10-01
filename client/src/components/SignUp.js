@@ -2,8 +2,7 @@ import React, { useState, useRef} from 'react';
 import { Redirect } from 'react-router-dom';
 
 function SignUp() {
-    const [ userData, setUserData ] = useState({ firstName: "", lastName: "", email: "", password: ""});
-
+    const [ userData, setUserData ] = useState({ firstName: "", lastName: "", email: "", password: "", passCode: ""});
     const [ isRegistered, setIsRegistered ] = useState( false );
 
     const [ alertMessage, setAlertMessage ] = useState( { type: "", message: ""} );
@@ -12,6 +11,7 @@ function SignUp() {
     const inputLastName = useRef();
     const inputEmail = useRef();
     const inputPassword = useRef();
+    const inputPassCode = useRef();
     
     function handleInputChange( e ){
         const { id, value } = e.target;
@@ -21,7 +21,6 @@ function SignUp() {
     async function registerUser( e ){
         e.preventDefault();
         console.log('is it working ?')
-
         if( userData.firstName === "" ) {
             inputFirstName.current.focus();
             setAlertMessage( { type: 'danger', message: 'Please provide your first name!' } );
@@ -37,21 +36,27 @@ function SignUp() {
             setAlertMessage( { type: 'danger', message: 'Please provide a valid Email!' } );
             return;
         }
-
         if( userData.password === "" ) {
             inputPassword.current.focus();
             setAlertMessage( { type: 'danger', message: 'Please provide a password!' } );
             return;
         }
-
         if( userData.password.length < 6 ) {
             inputPassword.current.focus();
             setAlertMessage( { type: 'danger', message: 'Please provide a longer password (8 characters min)!' } );
             return;
         }
-
+        if( userData.passCode === "" ) {
+            inputPassCode.current.focus();
+            setAlertMessage( { type: 'danger', message: 'Please provide a 4 or 6 digit passcode!' } );
+            return;
+        }
+        if( userData.passCode.length == 4 || userData.passCode.length == 6 ) {
+            inputPassCode.current.focus();
+            setAlertMessage( { type: 'danger', message: 'Please make sure the passcode is  4 or 6 digit!' } );
+            return;
+        }
         localStorage.clear();
-
         const apiResult = await fetch('/api/user/registration', 
             {   method: 'post',
                 headers: {
@@ -116,6 +121,16 @@ function SignUp() {
                         onChange={handleInputChange}
                         ref={inputPassword}
                         id="password" type="password" class="form-control" />
+                    </div>
+                </div>
+                <div class="mb-3 mx-auto">
+                    <div class="form-group">
+                        <label for="passCode">Pass code</label>
+                        <input
+                        value={userData.passCode}
+                        onChange={handleInputChange}
+                        ref={inputPassCode}
+                        id="passCode" type="password" class="form-control" />
                     </div>
                 </div>
                 <div class="mb-3 mx-auto">

@@ -3,17 +3,7 @@ const Schema = mongoose.Schema;
 
 let memberBuckets = new Schema (
     {
-        userId : { 
-            type: String,
-            trim: true,
-            required: true
-        },
         bucketName : { 
-            type: String,
-            trim: true,
-            required: true
-        },
-        bucketOwner : { 
             type: String,
             trim: true,
             required: true
