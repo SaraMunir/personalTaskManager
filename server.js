@@ -30,7 +30,7 @@ app.post('/api/user/login', async function( req,res ){
 });
 //Login
 app.post('/api/user/passCode', async function( req,res ){
-    console.log('in server is login working')
+    // console.log('in server is login working')
     const userData = req.body;
     const loginPassCode = await orm.loginPassCode( userData.passCode, userData.userId );
     res.send( loginPassCode );
@@ -232,6 +232,13 @@ app.put("/api/addToDashboard/:userId", async (req, res) => {
     const addBucketToDashboard = await orm.addBucketToDashboard(userId, bucketId);
     res.send(addBucketToDashboard);
     });
+//remove From Dashboard
+app.put("/api/removeFromDashboard/:userId", async (req, res) => {
+    const bucketId = req.body;
+    const userId = req.params.userId;
+    const removeFromDashboard = await orm.removeFromDashboard(userId, bucketId);
+    res.send(removeFromDashboard);
+    });
 
 app.put("/api/logMemberIn/:membId", async (req, res) => {
     const logInData = req.body;
@@ -245,3 +252,18 @@ app.put("/api/logMemberOut/:membId", async (req, res) => {
     const logMemberOut = await orm.logMemberOut(membId, logOutData);
     res.send(logMemberOut);
     });
+
+// /api/addToMyList
+app.post("/api/addToMyList", async (req, res) => {
+    const listData = req.body;
+    const addItemToMyList = await orm.addItemToMyList(listData);
+    res.send(addItemToMyList);
+    });
+
+    // /api/loadMyList/${userId}
+app.get('/api/loadMyList/:userId', async (req,res)=>{
+    const userId = req.params.userId;
+    const getMyGroceryItms = await orm.getMyGroceryItms(userId);
+    // console.log('in servers: ')
+    res.json(getMyGroceryItms);
+})

@@ -364,6 +364,16 @@ async function addBucketToDashboard(userId, bucketId){
         message: "Member Password successfully Updated", 
     };
 }
+async function removeFromDashboard(userId, bucketId){
+
+    const removeFromDashboard = await db.users.findOneAndUpdate(
+        { _id: userId},
+            { "$pull": {myDashboarBuckets: {bucketId: bucketId.bckId}}}
+    );
+    return { 
+        message: "Member Password successfully Updated", 
+    };
+}
 async function logMemberIn(membId, logInData){
     const loggedInData= {
         present: true,
@@ -389,6 +399,19 @@ async function logMemberOut(membId, logOutData){
     return { 
         message: "Member Password successfully Updated", 
     };
+}
+
+// addItemToMyList
+
+async function addItemToMyList( listData ){
+    const dbMyGroceryItems = new db.myGroceryItems( listData );
+    const saveGroceryItem = await dbMyGroceryItems.save();
+    return {message: "item added successfully!!"}
+}
+
+async function getMyGroceryItms(userId){
+    const getMyGroceryItms = await db.myGroceryItems.find({ ownerId: userId});
+    return getMyGroceryItms;
 }
 
 
@@ -438,5 +461,9 @@ module.exports = {
     deleteMember,
     trackMember,
     cancelTrackMember,
-    addBucketToDashboard
+    addBucketToDashboard,
+    removeFromDashboard,
+
+    addItemToMyList,
+    getMyGroceryItms
 }

@@ -1,10 +1,11 @@
 import React, { useState, useRef } from "react";
 import { Redirect } from 'react-router-dom';
-
+import LoadingImg from './assets/Spinner-1s-200px.gif'
 function LogIn() {
     // DECLARATIVE FORM OF PROGRAMMING
     const [ userData, setUserData ] = useState({ firstName: "", lastName: "", email: localStorage.email, password: "", rememberMe: true });
     const [ isLoggedIn, setIsLoggedIn ] = useState( false );
+    const [ LoadingOn, setLoadingOn ] = useState( false );
     const [ alertMessage, setAlertMessage ] = useState( { type: "", message: ""} );
     const inputEmail = useRef();
     const inputPassword = useRef();
@@ -30,30 +31,45 @@ function LogIn() {
             setAlertMessage( { type: 'danger', message: 'Please provide your password!' } );
             return;
         }
-        const apiResult = await fetch('/api/user/login', 
-            {   method: 'post',
-                headers: {
-                    'Accept': 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(userData)
-            }).then( result=>result.json())
-            if( !apiResult.message ){
-                setAlertMessage( { type: 'danger', message: apiResult.error } );
-                return;
-            };
-            console.log(apiResult)
-            localStorage.setItem('id', apiResult.id);
-            localStorage.setItem('firstName', apiResult.firstName);
-            localStorage.setItem('lastName', apiResult.lastName);
-            localStorage.setItem('profileImg', apiResult.profileImg);
-        setAlertMessage( { type: 'success', message: 'Loading, please wait...' } );
-        localStorage.email = ( apiResult.rememberMe ? apiResult.email : '' );
-        setTimeout( function(){ setIsLoggedIn(true); }, 2000 );
+        setLoadingOn(true)
+        setTimeout(async() => {
+            const apiResult = await fetch('/api/user/login', 
+                {   method: 'post',
+                    headers: {
+                        'Accept': 'application/json, text/plain, */*',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(userData)
+                }).then( result=>result.json())
+            
+                if( !apiResult.message ){
+                    setAlertMessage( { type: 'danger', message: apiResult.error } );
+                    setLoadingOn(false)
+                    return;
+                };
+                console.log(apiResult)
+                localStorage.setItem('id', apiResult.id);
+                localStorage.setItem('firstName', apiResult.firstName);
+                localStorage.setItem('lastName', apiResult.lastName);
+                localStorage.setItem('profileImg', apiResult.profileImg);
+                setAlertMessage( { type: 'success', message: 'Loading, please wait...' } );
+            localStorage.email = ( apiResult.rememberMe ? apiResult.email : '' );
+            setTimeout( function(){ setIsLoggedIn(true); }, 2000 );
+        }, 1000);
     }
 
     return (
-        <div class="container card mt-4 col-md-8">
+        <div class="container card mt-4 col-md-8 mx-auto">
+            {
+                LoadingOn === true ? 
+            <div className="deactivate mx-auto">
+                <div className="col-6 mx-auto">
+                    <img className="mx-auto" src={LoadingImg}alt=""/>
+                    <p className="mx-auto">Please Wait</p>
+                </div>
+            </div>:
+            ''
+            }
             { isLoggedIn ? <Redirect to='/Profiles' /> : '' }
             <div className={ alertMessage.type ? `alert alert-${alertMessage.type}` : 'd-hide' } role="alert">
                 {alertMessage.message}

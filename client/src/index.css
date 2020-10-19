@@ -100,12 +100,7 @@ code {
 /* .test:active .testHidden {
   visibility: visible;
 } */
-.gridPic{
-  background-image: url(components/PictureGrid/assets/alexis-antonio-TFth26tEjss-unsplash.jpg);
-  /* width: 100%; */
-  background-size: 900px;
-  /* margin: 2px; */
-}
+
 .img2{
   background-position-x: -300px;
   background-repeat: no-repeat;
@@ -462,10 +457,24 @@ code {
   background: #b2acbd;
   border-radius: 5px;
 }
-.myShoppingList{
+.anotherList{
+  width: 35%;
+  height: 100vh;
   position: absolute;
-  width: 50%;
+  top: 60px;
+  right: 0;
+}
+.myShoppingList{
+  position: sticky;
   background: #ad9fcc;
+  z-index: 10;
+  top: 0;
+  right: 0;
+  padding: 10px;
+  border-radius: 5px;
+}
+.shoppingListSticky{
+  position: sticky;
   z-index: 10;
   top: 0;
   right: 0;
@@ -726,15 +735,29 @@ z-index: 300;
 .buckTaskCnt:hover{
   overflow-y: scroll;
 }
-.buckTaskCnt::-webkit-scrollbar{
+.buckTaskCnt::-webkit-scrollbar, .groceryListGroup::-webkit-scrollbar{
   border-radius: 5px;
   width: 8px;
   background:  #a29caf27;
 }
-.buckTaskCnt::-webkit-scrollbar-thumb {
+.groceryListGroup{
+  height: 50vh;
+  overflow-y: hidden;
+  transition: .7s ease all;
+}
+.groceryListGroup::-webkit-scrollbar{
+  position: absolute;
+  top: 0;
+}
+.groceryListGroup:hover{
+  overflow-y: scroll;
+}
+.buckTaskCnt::-webkit-scrollbar-thumb ,  .groceryListGroup::-webkit-scrollbar-thumb {
   background: #a894d1; 
   border-radius: 5px;
 }
+
+
 .toDoBtn{
   width: 15px;
   height: 15px;
@@ -746,4 +769,13 @@ z-index: 300;
   cursor: pointer;
   box-shadow: 1px 2px 6px #2a2730b0;
 
+}
+
+.deactivate{
+  background: #2e2e4170;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
 }

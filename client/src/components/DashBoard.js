@@ -29,22 +29,40 @@ function DashBoard() {
         setAllBucketList(fetchBucketList)
     }
     async function addToDashBoard(bckId){
-        userInfo.myDashboarBuckets.map(buckets=>{
+        let doesBucktExist = false
+            userInfo.myDashboarBuckets.map( async (buckets)=>{
             if(buckets.bucketId === bckId){
+                doesBucktExist = true;
                 setAlertMessage( { type: 'danger', message: 'Bucket is already in your list!' } );
                 setTimeout(function(){  setAlertMessage( { type: '', message: '' } ); }, 2000);
+                return;
+            } 
+        }) 
+        if (doesBucktExist === false){
+            let bucketId={bckId}
+            const apiResult = await fetch(`/api/addToDashboard/${userId}`, 
+                {   method: 'PUT',
+                    headers:{
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(bucketId)
+                }).then( result => result.json());
+                loadUserInfo()
                 return
-            }
-        })
+        }
+    }
+    async function removeBuckt(bckId ){
+        console.log('bucket id: ', bckId)
         let bucketId={bckId}
-        const apiResult = await fetch(`/api/addToDashboard/${userId}`, 
-            {   method: 'PUT',
-                headers:{
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(bucketId)
-            }).then( result => result.json());
-            loadUserInfo()
+
+        const apiResult = await fetch(`/api/removeFromDashboard/${userId}`, 
+        {   method: 'PUT',
+            headers:{
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(bucketId)
+        }).then( result => result.json());
+        loadUserInfo()
     }
     useEffect( function(){
         loadUserInfo()
@@ -68,11 +86,11 @@ function DashBoard() {
                                 allBucketList.map( (bucket, idx) =>
                                     <div 
                                     key={`buckets2-${idx}`} class="dropdown-item" onClick={()=>addToDashBoard(bucket._id)}>{bucket.bucketName}  
-                                    <div class="dropdown-divider"></div>
+                                        <div class="dropdown-divider"></div>
                                     </div>
                                     )}
                             </div>
-                            </div>
+                        </div>
                     </div>
                     <hr/>
                     <div className="lists bucketsCntnr row mx-auto">
@@ -80,7 +98,14 @@ function DashBoard() {
                         allBucketList.map(allBucks=>
                         allBucks._id === dashBuckets.bucketId ? 
                         <div className='buckets mx-auto'>
-                            <h5>{allBucks.bucketName}</h5>
+                            <div className="d-flex justify-content-between">
+                                <h5>{allBucks.bucketName}</h5>
+                                <div className="hoverNmSh">
+                                    <i class="fas fa-times-circle" style={{cursor: 'pointer', padding: '5px'}} onClick={()=>removeBuckt(dashBuckets.bucketId )}
+                                    ></i>
+                                    <span className="hoverName" style={{top: '-40px', right: '20px', width: '150px'}}>remove bucket</span>
+                                </div>
+                            </div>
                             <hr/>
                             <div className='buckTaskCnt'>
                                 {allBucks.bucketTasks.length=== 0 ? 'nothing to show':
@@ -99,8 +124,6 @@ function DashBoard() {
                     <h4>Grocery List</h4>
                     <hr/>
                 </div>
-    
-
             </div>
         </div>
     )
