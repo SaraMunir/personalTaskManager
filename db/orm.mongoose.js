@@ -3,7 +3,11 @@ const bcrypt = require ( 'bcrypt' );
 
 // mongoose.connect(`mongodb://${process.env.myTasks}`,{useNewUrlParser: true});
 
-mongoose.connect(`mongodb://localhost:27017/myHubTasks`, {useNewUrlParser: true, useFindAndModify: false});
+// mongoose.connect(`mongodb://localhost:27017/myHubTasks`, {useNewUrlParser: true, useFindAndModify: false});
+
+const password= '1qaz2wsx'
+const dbname= 'myHubTasks'
+mongoose.connect(`mongodb+srv://saramunir011:${password}@cluster0.df4lk.mongodb.net/${dbname}?retryWrites=true&w=majority`, {useNewUrlParser: true, useFindAndModify: false});
 
 const db = require( './models' );
 //registration: 

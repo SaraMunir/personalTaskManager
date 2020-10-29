@@ -9,6 +9,7 @@ const app = express();
  
 var server = app.listen( PORT, function(){ console.log( `[MyFamilyTask], http://localhost:${PORT}` ); });
 // app.use( express.static('client/build/') );
+app.use( express.static(path.join(__dirname, 'client/build'))) ;
 app.use(express.static(path.join(__dirname, "client/src/components/Grocery")));
 app.use( express.urlencoded({ extended: false }) );
 app.use( express.json() );
@@ -345,3 +346,10 @@ app.get('/api/completeShoppingList/:shopId', async (req,res)=>{
     const completeShoppingList = await orm.completeShoppingList(shopId);
     res.json(completeShoppingList);
 })
+
+
+
+app.get('/*', function( req,res ){
+    console.log("redirect to index page!");
+    res.sendFile( path.join(__dirname, 'client/build', 'index.html') );
+});
