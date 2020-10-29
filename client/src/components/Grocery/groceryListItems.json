@@ -18,5 +18,52 @@
         "id": "04",
         "category": "spices",
         "list_item": ["Chili powder","Corriander","Garlic Powder","Ginger Powder","Hot sauce","Onion Powder","Paprika","Pepper","Salt","Turmeric"]
+    },
+    {
+        "id": "05",
+        "category": "refrigerated",
+        "list_item": ["Almond Milk","Coconut Yogurt","Eggs","Greek yogurt","Mexican cheese blend","Mild Cheddar","Milk","Mozzarella cheese","Sour cream","Tortillas","vegan cheese","Vegan Cream cheese"]
+    },
+    {
+        "id": "06",
+        "category": "snacks",
+        "list_item": ["Almond Flour Crackers",
+        "Annies Cheddar Bunnies",
+        "Cheese Rockets",
+        "Crunchy Chickpeas",
+       " Platanitos/ Plantain chips" ,
+        "Pretzels" ,
+        "Pringles",
+        "Puffed Rice"]
+    },
+    {
+        "id": "07",
+        "category": "proteins",
+        "list_item": ["Beef",
+        "Boom Boom Shrimp",
+        "Chicken Breast" ,
+        "Chicken Slices", 
+        "Chicken Wings", 
+        "Hot dogs", 
+        "Lamb", 
+        "Mini sausages", 
+        "Proteins",
+        "Quartered Chicken", 
+        "Salmon",
+        "Sausages", 
+        "Turkey",
+        "Turkey slices",
+        "Whole Chicken"]
+    },
+    {
+        "id": "08",
+        "category": "homeEssentials",
+        "list_item": ["Dish Soap",
+        "Dishwasher Tablets",
+        "Hand Soap",
+        "Home Essentials", 
+        "Laundry detergent",
+        "Paper Towels",
+        "Toilet Paper "]
     }
 ]

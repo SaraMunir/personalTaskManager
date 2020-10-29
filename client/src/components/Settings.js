@@ -1,9 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react'
+import Avatars from  "./Avatars";
+import Loader from  "./assets/Rolling-1s-200px.gif";
 
 function Settings() {
     const inputPassCode = useRef();
     const userId = localStorage.id
     const profileImg = localStorage.profileImg
+    const profileImgClass = localStorage.profileImgClass
+    const [loading, setLoading] = useState(false);
+
     const email = localStorage.email
     const firstName = localStorage.firstName
     const lastName = localStorage.lastName
@@ -20,6 +25,9 @@ function Settings() {
     const [ newPassCode, setNewPassCode]=useState({passCode: ""})
     const [ editPassCodeBtn, setEditPassCodeBtn]=useState(true)
     const [ editPassWrdBtn, setEditPassWrdBtn]=useState(true)
+    const [avatarWindow, setAvatarWindow] = useState(false);
+    const [active, setActive] = useState('')
+    const [myAvatar, setMyAvatar] = useState({})
     const [ edit, setEdit ] = useState({})
     function handleInputChange( e ){
         const { id, value } = e.target; 
@@ -96,38 +104,6 @@ function Settings() {
             }
         }
     }
-    function handleChange(e){
-        const file = e.target.files[0];
-        setMyPic(file)
-    }
-    async function handleUpload(e){
-        e.preventDefault();
-        if(myPic){
-            let myForm = document.getElementById('myForm');
-            let formData = new FormData(myForm);
-            const uploadPic = await fetch(`/api/adminUpload/${userId}`, 
-                {
-                    method: 'PUT',
-                    body: formData
-                }
-            ).then( result=>result.json())
-        }
-        if(adminDetail.profileImg){
-            let oldPhoto = {old: adminDetail.profileImg};
-            //delet old photo
-            const deleteOldPIc = await fetch(`/api/deleteOldProfilePIc`, 
-            {   method: 'post',
-                headers: {
-                'Accept': 'application/json, text/plain, */*',
-                'Content-Type': 'application/json'
-            },
-                body: JSON.stringify(oldPhoto)
-            }).then( result=>result.json());
-            
-        }
-            setLgShow2(false)
-            loadAdminProfile();
-    }
     async function updateDetDetail(){
         const apiResult = await fetch(`/api/adminDetailUpdate/${userId}`, 
             {   method: 'PUT',
@@ -146,12 +122,46 @@ function Settings() {
         console.log('getAdmnDetail: ', getAdmnDetail)
         setAdminDetail(getAdmnDetail);
     }
-
+    function makeActive(idx,src){
+        console.log('src in settings: ', src)
+        setActive(idx)
+        setMyAvatar({profileImgClass: src})
+    }
+    async function changeAvatar(){
+        setLoading(true)
+        console.log('myAvatar: ', myAvatar)
+        const apiResult = await fetch(`/api/changeMyAvatar/${userId}`, 
+        {   method: 'post',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(myAvatar)
+        }).then( result=>result.json());
+        localStorage.setItem('profileImgClass', myAvatar.profileImgClass);
+        loadAdminProfile();
+        setLoading(false)
+        setAvatarWindow(false)
+    }
     useEffect(function(){
         loadAdminProfile();
     },[])
     return (
         <div className="settingsPage mx-auto border">
+            <div className={avatarWindow === true ? "loaderWindow": "hide"}>
+                <div className="container">
+                    <div className="d-flex justify-content-end">
+                        <div className="myBtn" onClick={()=>setAvatarWindow(false)}><i class="fas fa-times"></i></div>
+                    </div>
+                    <Avatars active={active} makeActive={makeActive} />
+                    <div className={loading === true ? "loaderWindow": "hide"}>
+                        <div className="loadingWnd">
+                            <img className="loadingGif" src={Loader} alt="loadingWndow"/>
+                        </div>
+                    </div>
+                    <div className="myBtn mx-auto text-center" onClick={changeAvatar}>Select</div>
+                </div>
+            </div>
             <div className="col-6 mx-auto" style={{position: "fixed", top: "20px", right: "20px", zIndex: "300"}}>
                 <div className={ alertMessage.type ? `alert alert-${alertMessage.type}` :
                 'd-hide' 
@@ -167,8 +177,13 @@ function Settings() {
                 {showPersonalSection == true ? 
                 <div className="row container mx-auto">
                     <div className="profilImgCntnr mx-auto border">
-                        <img className="myProfileImg" src={profileImg} alt=""/>
-                        <div className="myBtnRnd col-5 mx-auto mt-3"><i class="fas fa-camera"></i> &nbsp; Upload</div>
+                        {
+                        adminDetail.profileImgClass==='' || !adminDetail.profileImgClass ? <img src='https://racemph.com/wp-content/uploads/2016/09/profile-image-placeholder.png' className="myProfileImg" alt=""/>:
+                        <div className={`myProfileImg mx-auto ${adminDetail.profileImgClass}`}></div>
+                        }
+                        <div className="myBtnRnd mx-auto mt-3 text-center col-8" onClick={()=>setAvatarWindow(true)}>
+                            <i class="fas fa-camera"></i> &nbsp; Select Avatar
+                        </div>
                     </div>
                     <div className="profileDetContnr col-lg-8 border mx-auto pt-5">
                         <div className="userName d-flex col-12 border mx-auto">

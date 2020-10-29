@@ -1,6 +1,9 @@
 import React, {useState, useEffect, useRef } from 'react';
 import {Modal, Button} from 'react-bootstrap'
 import { Link, useParams } from "react-router-dom";
+import Avatars from  "./Avatars";
+import Loader from  "./assets/Rolling-1s-200px.gif";
+
 function MemberProfile() {
     const userId = localStorage.id
     const profileType = localStorage.profileType;
@@ -15,7 +18,6 @@ function MemberProfile() {
     // const thisYear = (d.getYear());
     const [datesToday, setDatesToday]=useState(d)
     const today = d.getDate();
-    const todaysDate = ` ${year}-${thisMonth2}-${today}`
     // 2020-09-29
     const { memberId } = useParams();
     const { memberName } = useParams();
@@ -37,7 +39,12 @@ function MemberProfile() {
     const [bucketState, setBucketState] = useState(
         { bktTaskName: "",bucketOwnerId: memberId, userId: localStorage.id},
     );
-    const [months, setMonths] = useState(monthsArr)
+    const [active, setActive] = useState('')
+    const [memberAvatar, setMemberAvatar] = useState({})
+    const [months, setMonths] = useState(monthsArr);
+    const [avatarWindow, setAvatarWindow] = useState(false);
+    const [loading, setLoading] = useState(false);
+
     const [timeLogInsId, setTimeLogInsId] = useState('')
     const memberListArr= [];
     function handleBucketChange(e){
@@ -210,6 +217,26 @@ function MemberProfile() {
             }).then( result => result.json());
             loadMemberDetail()
     }
+    function makeActive(idx,src){
+        console.log('src in settings: ', src)
+        setActive(idx)
+        setMemberAvatar({profileImgClass: src})
+    }
+    async function changeMembAvatar(){
+        setLoading(true)
+        console.log('memberAvatar: ', memberAvatar)
+        const apiResult = await fetch(`/api/changeMemberAvatar/${memberId}`, 
+        {   method: 'post',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(memberAvatar)
+        }).then( result=>result.json());
+        loadMemberDetail();
+        setLoading(false)
+        setAvatarWindow(false)
+    }
     useEffect(function(){
         loadMemberDetail()
         LoadAllList()
@@ -223,19 +250,37 @@ function MemberProfile() {
                 <div class="myBtnRnd"><i class="far fa-arrow-alt-circle-left" style={{fontSize: "1.2rem"}}></i> &nbsp; Go Back</div>
             </Link>: ''}
             </div>
+            <div className={avatarWindow === true ? "loaderWindow": "hide"}>
+                <div className="container">
+                    <div className="d-flex justify-content-end">
+                        <div className="myBtn" onClick={()=>setAvatarWindow(false)}><i class="fas fa-times"></i></div>
+                    </div>
+                    <Avatars active={active} makeActive={makeActive} />
+                    <div className={loading === true ? "loaderWindow": "hide"}>
+                        <div className="loadingWnd">
+                            <img className="loadingGif" src={Loader} alt="loadingWndow"/>
+                        </div>
+                    </div>
+                    <div className="myBtn mx-auto text-center" onClick={changeMembAvatar}>Select</div>
+                </div>
+            </div>
             <div className="mainBox">
                 <div className="darkPurpleSection mb-5">
                     <div className="row newCardLg">
                         <div className="col-3">
-                            <img src={memberDetail.profileImg} alt="" className="membProPic"/>
+                            {memberDetail.profileImgClass===""?
+                                <img src='https://racemph.com/wp-content/uploads/2016/09/profile-image-placeholder.png' alt="" class="empAvatar"/>
+                                :
+                                <div className={`mx-auto empAvatar ${memberDetail.profileImgClass}`}></div>
+                            }
                         </div>
                         <div className="membAbout col-5">
                             <div className="d-flex">
-                                <h3>{memberDetail.name}</h3>
+                                <h3 className="text-capitalize">{memberDetail.name}</h3>
                                 {memberDetail.timeTrack == true ? <i class="ml-3 mt-2 fas fa-stopwatch" style={{fontSize: '1.5rem', color: "#a894d1"}}></i>:''}
                             </div>
                             {profileType=='Admin' ? 
-                            <div className="myBtnRnd col-4 text-center">Edit</div>
+                            <div className="myBtnRnd col-4 text-center"  onClick={()=>setAvatarWindow(true)}>Select Avatar</div>
                             : ''}
                         </div>
                         <div className="logins col-4 border mx-auto text-center">

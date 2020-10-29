@@ -5,8 +5,9 @@ function AdminsLogIn() {
     const userId = localStorage.id
     const firstName = localStorage.firstName
     const lastName = localStorage.lastName
-
+    const profileImgClass = localStorage.profileImgClass
     const profileImg = localStorage.profileImg;
+
     const [ userData, setUserData ] = useState({ passCode: "", userId: userId});
     const [ isLoggedIn, setIsLoggedIn ] = useState( false );
 
@@ -45,12 +46,14 @@ function AdminsLogIn() {
                 </Link>
             </div>
             { isLoggedIn ? <Redirect to='/AdminsProfile/Dashboard' /> : '' }
-
-
             <div className="darkCard col-6 mx-auto mt-5">
                 <div className="card-body">
                     <div className="col-12 mx-auto d-flex">
-                        <img src={profileImg} alt="" className="prfImg mx-auto"/>
+                    {
+                    profileImgClass==='' || !profileImgClass  ||profileImgClass==='undefined' ? <img src='https://racemph.com/wp-content/uploads/2016/09/profile-image-placeholder.png' className="mx-auto prfImg" alt=""/>:
+                    <div className={`prfImg mx-auto ${profileImgClass}`}></div>
+                    
+                    }
                     </div>
                     <div className="col-12 mx-auto d-flex">
                         <h1 className="mx-auto">{firstName}  {lastName}</h1>

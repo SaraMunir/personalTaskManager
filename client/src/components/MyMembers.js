@@ -2,17 +2,24 @@ import React, {useState, useEffect, useRef } from 'react';
 import {Modal, Button} from 'react-bootstrap'
 import { Link, useParams } from "react-router-dom";
 import { Redirect , useHistory } from 'react-router-dom';
+import Loader from  "./assets/Rolling-1s-200px.gif";
+import Avatars from  "./Avatars";
+
 function MyMembers() {
     const userId = localStorage.id
     const inputPassword = useRef();
+    const [loading, setLoading] = useState(false);
     const [lgShow, setLgShow] = useState(false);
-    const [ myMember, setMyMember ] = useState({ membName: "", membDesc: "", profileImg: "", membRole: "", membSex: "", userId: `${userId}`, timeTrack: ''});
+    const [avatarWindow, setAvatarWindow] = useState(false);
+    const [ myMember, setMyMember ] = useState({ membName: "", membDesc: "", profileImg: "", profileImgClass: "", membRole: "", membSex: "", userId: `${userId}`, timeTrack: false});
     const [membersList, setMembersList] = useState([]);
     const [membersList2, setMembersList2] = useState([]);
     const [selectedMember, setSelectedMember] = useState({})
     const [ showModal, setShowModal ] = useState(false)
     const [ deleteModal, setDeleteModal ] = useState(false)
     const [ trackerModal, setTrackerModal ] = useState(false)
+    const [active, setActive] = useState('')
+
     function handleInputChange( e ){
         const { id, value } = e.target; 
         setMyMember( { ...myMember, [id]: value } );
@@ -23,8 +30,9 @@ function MyMembers() {
         setMembersList(fetchMember)
     }
     async function submitMember(e){
+        setLoading(true)
         e.preventDefault();
-        console.log(myMember)
+        console.log("myMember: ", myMember)
         const apiResult = await fetch('/api/member', 
             {   method: 'post',
                 headers: {
@@ -34,9 +42,10 @@ function MyMembers() {
                 body: JSON.stringify(myMember)
             }).then( result=>result.json());
             console.log(apiResult.message)
-            setMyMember({ membName: "", membDesc: "",membPic: "", membRole: "", membSex: "", userId: `${userId}`})
-            setLgShow(false);
-            loadMembers()
+            setMyMember({ membName: "", membDesc: "", profileImg: "", profileImgClass: "", membRole: "", membSex: "", userId: `${userId}`, timeTrack: false})
+        setLgShow(false);
+        loadMembers()
+        setLoading(false)
     }
     async function deleteMemb(memberId){
         console.log('employee id : ', memberId)
@@ -94,23 +103,39 @@ function MyMembers() {
             }
         }
     }
-    function showSomething (idx){
-        console.log('idx: ', idx)
+    function makeActive(idx,src){
+        // // console.log('idx ', idx)
+        // console.log('src ', src)
+        setActive(idx)
+        setMyMember({ ...myMember, profileImgClass: src})
     }
     useEffect(function(){
         loadMembers()
         // console.log('teamDetail: ', teamDetail)
     },[])
-
-
     return (
         <div>
             { userId ? '' : <Redirect to='/welcomePage'/>}
+            <div className={loading === true ? "loaderWindow": "hide"}>
+                <div className="loadingWnd">
+                    <img className="loadingGif" src={Loader} alt="loadingWndow"/>
+                </div>
+            </div>
+            {/* avatarWindow, setAvatarWindow */}
+            <div className={avatarWindow === true ? "loaderWindow": "hide"}>
+                <div className="container">
+                    <div className="d-flex justify-content-end">
+                        <div className="myBtn cursor" onClick={()=>setAvatarWindow(false)}><i class="fas fa-times"></i></div>
+                    </div>
+                    <Avatars active={active} makeActive={makeActive} />
+                    <div className="myBtn" onClick={()=>setAvatarWindow(false)}>Select</div>
+                </div>
+            </div>
             {showModal == true ? <div className="delConfWndo">
                 <div className="card">
                     { deleteModal == true ? 
                     <div className="card-body col-10 mx-auto text-center">
-                        <img src={selectedMember ? selectedMember.profileImg : ''} alt="" class="empAvatar mx-auto"/>
+                        <div className={`empAvatar mx-auto ${selectedMember.profileImgClass}`}></div> 
                         <h3>{selectedMember ? selectedMember.name : ''}</h3>
                         <h4>Are you sure You would like to delete member?</h4>
                         <div className="d-flex mx-auto col-6">
@@ -121,7 +146,7 @@ function MyMembers() {
                     : ''}
                     { trackerModal == true ? 
                     <div className="card-body col-10 mx-auto text-center">
-                        <img src={selectedMember ? selectedMember.profileImg : ''} alt="" class="empAvatar mx-auto"/>
+                        <div className={`empAvatar mx-auto ${selectedMember.profileImgClass}`}></div>
                         <h3>{selectedMember ? selectedMember.name : ''}</h3>
                         {selectedMember.timeTrack === false ?
                         <div>
@@ -143,8 +168,11 @@ function MyMembers() {
                     : ''}
                 </div>
             </div> : ''}
-            <div className="border mb-4">
-                <Button onClick={() => setLgShow(true)}>Add Member</Button>
+            <div className=" mb-4 mx-auto col-12">
+                <div className="mx-auto col-2">
+                    {/* <Button className="myBtn mx-auto"></Button> */}
+                    <div className="myBtn mx-auto cursor text-center"  onClick={() => setLgShow(true)}>Add Member</div>
+                </div>
                 <Modal
                 size="lg"
                 show={lgShow}
@@ -161,15 +189,12 @@ function MyMembers() {
                                 <input type="text" class="form-control" 
                                 id="membName" aria-describedby="taskHelp" onChange={handleInputChange} 
                                 value={myMember.membName}/>
-                                <label for="profileImg">Image Url</label>
-                                <input type="text" class="form-control" 
-                                id="profileImg" aria-describedby="taskHelp" onChange={handleInputChange} 
-                                value={myMember.profileImg}/>
-                                <label for="membRole">role</label>
+                                <label for="membRole">Role</label>
                                 <input type="text" class="form-control" 
                                 id="membRole" aria-describedby="taskHelp" onChange={handleInputChange} 
                                 value={myMember.membRole}/>
-                                <div className="form-group mt-2">
+                                <div className="myBtn mt-3 text-center" onClick={()=>setAvatarWindow(true)}>Select Avatar</div>
+                                <div className="form-group mt-3">
                                     <label for="membSex">Add Time Tracker</label>
                                     <div className="d-flex">
                                         <div className="d-flex  col-1 mr-2">
@@ -225,7 +250,12 @@ function MyMembers() {
                             </div>
                         </div>
                         <div class="card-body mx-auto text-center">
-                            <img src={member.profileImg} alt="" class="empAvatar"/>
+                            {member.profileImgClass===""?
+                                <img src='https://racemph.com/wp-content/uploads/2016/09/profile-image-placeholder.png' alt="" class="empAvatar"/>
+                                :
+                                <div className={`empAvatar ${member.profileImgClass}`}></div>
+                                
+                            }
                             <h5 class="card-title">{member.name}</h5>
                             <p class="card-text">{member.membRole}</p>
                             <Link to={`/AdminsProfile/MemberProfile/${member._id}/${member.name}`} >

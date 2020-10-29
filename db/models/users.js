@@ -3,11 +3,6 @@ const Schema = mongoose.Schema;
 
 let users = new Schema (
     {
-        name : { 
-            type: String,
-            trim: true,
-            required: true
-        },
         firstName : { 
             type: String,
             trim: true,
@@ -33,6 +28,9 @@ let users = new Schema (
         profileImg: {
             type: String,
             default: 'https://getdrawings.com/free-icon-bw/anonymous-avatar-icon-19.png'  
+        },
+        profileImgClass: {
+            type: String
         },
         groceryList: [
             {

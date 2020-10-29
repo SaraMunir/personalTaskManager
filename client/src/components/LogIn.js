@@ -1,11 +1,13 @@
 import React, { useState, useRef } from "react";
 import { Redirect } from 'react-router-dom';
-import LoadingImg from './assets/Spinner-1s-200px.gif'
+import Loader from  "./assets/Rolling-1s-200px.gif";
+
 function LogIn() {
     // DECLARATIVE FORM OF PROGRAMMING
     const [ userData, setUserData ] = useState({ firstName: "", lastName: "", email: localStorage.email, password: "", rememberMe: true });
     const [ isLoggedIn, setIsLoggedIn ] = useState( false );
-    const [ LoadingOn, setLoadingOn ] = useState( false );
+    const [loading, setLoading] = useState(false);
+
     const [ alertMessage, setAlertMessage ] = useState( { type: "", message: ""} );
     const inputEmail = useRef();
     const inputPassword = useRef();
@@ -31,8 +33,7 @@ function LogIn() {
             setAlertMessage( { type: 'danger', message: 'Please provide your password!' } );
             return;
         }
-        setLoadingOn(true)
-        setTimeout(async() => {
+        setLoading(true)
             const apiResult = await fetch('/api/user/login', 
                 {   method: 'post',
                     headers: {
@@ -44,32 +45,31 @@ function LogIn() {
             
                 if( !apiResult.message ){
                     setAlertMessage( { type: 'danger', message: apiResult.error } );
-                    setLoadingOn(false)
+                    setLoading(false)
                     return;
                 };
                 console.log(apiResult)
                 localStorage.setItem('id', apiResult.id);
                 localStorage.setItem('firstName', apiResult.firstName);
                 localStorage.setItem('lastName', apiResult.lastName);
-                localStorage.setItem('profileImg', apiResult.profileImg);
+                // localStorage.setItem('profileImg', apiResult.profileImg);
+                localStorage.setItem('profileImgClass', apiResult.profileImgClass);
+                localStorage.setItem('newShoppingList', [''])
                 setAlertMessage( { type: 'success', message: 'Loading, please wait...' } );
             localStorage.email = ( apiResult.rememberMe ? apiResult.email : '' );
-            setTimeout( function(){ setIsLoggedIn(true); }, 2000 );
-        }, 1000);
+            setTimeout( function(){ setIsLoggedIn(true); }, 500 );
+            setLoading(false)
+
     }
 
     return (
         <div class="container card mt-4 col-md-8 mx-auto">
-            {
-                LoadingOn === true ? 
-            <div className="deactivate mx-auto">
-                <div className="col-6 mx-auto">
-                    <img className="mx-auto" src={LoadingImg}alt=""/>
-                    <p className="mx-auto">Please Wait</p>
+            <div className={loading === true ? "loaderWindow": "hide"}>
+                <div className="loadingWnd">
+                    <img className="loadingGif" src={Loader} alt="loadingWndow"/>
                 </div>
-            </div>:
-            ''
-            }
+            </div>
+
             { isLoggedIn ? <Redirect to='/Profiles' /> : '' }
             <div className={ alertMessage.type ? `alert alert-${alertMessage.type}` : 'd-hide' } role="alert">
                 {alertMessage.message}

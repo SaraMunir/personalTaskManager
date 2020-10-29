@@ -1,0 +1,200 @@
+[
+    {
+        "id": "01",
+        "type": "animals",
+        "active": false, 
+        "src": "animal1"
+    },
+    {
+        "id": "02",
+        "type": "animals",
+        "active": false, 
+        "src": "animal2"
+    },
+    {
+        "id": "03",
+        "type": "animals",
+        "active": false, 
+        "src": "animal3"
+    },
+    {
+        "id": "04",
+        "type": "animals",
+        "active": false, 
+        "src": "animal4"
+    },
+    {
+        "id": "05",
+        "type": "animals",
+        "active": false, 
+        "src": "animal5"
+    },
+    {
+        "id": "06",
+        "type": "animals",
+        "active": false, 
+        "src": "animal6"
+    },
+    {
+        "id": "07",
+        "type": "animals",
+        "active": false, 
+        "src": "animal7"
+    },
+    {
+        "id": "08",
+        "type": "animals",
+        "active": false, 
+        "src": "animal8"
+    },
+    {
+        "id": "09",
+        "type": "female",
+        "active": false, 
+        "src": "female1"
+    },
+    {
+        "id": "10",
+        "type": "female",
+        "active": false, 
+        "src": "female2"
+    },
+    {
+        "id": "11",
+        "type": "female",
+        "active": false, 
+        "src": "female3"
+    },
+    {
+        "id": "12",
+        "type": "female",
+        "active": false, 
+        "src": "female4"
+    },
+    {
+        "id": "13",
+        "type": "female",
+        "active": false, 
+        "src": "female5"
+    },
+    {
+        "id": "14",
+        "type": "female",
+        "active": false, 
+        "src": "female6"
+    },
+    {
+        "id": "15",
+        "type": "female",
+        "active": false, 
+        "src": "female7"
+    },
+    {
+        "id": "16",
+        "type": "female",
+        "active": false, 
+        "src": "female8"
+    },
+    {
+        "id": "17",
+        "type": "male",
+        "active": false, 
+        "src": "male1"
+    },
+    {
+        "id": "18",
+        "type": "male",
+        "active": false, 
+        "src": "male2"
+    },
+    {
+        "type": "male",
+        "active": false, 
+        "src": "male3"
+    },
+    {
+        "type": "male",
+        "active": false, 
+        "src": "male4"
+    },
+    {
+        "type": "male",
+        "active": false, 
+        "src": "male5"
+    },
+    {
+        "type": "male",
+        "active": false, 
+        "src": "male6"
+    },
+    {
+        "type": "male",
+        "active": false, 
+        "src": "male7"
+    },
+    {
+        "type": "male",
+        "active": false, 
+        "src": "male8"
+    },
+    {
+        "type": "girl",
+        "active": false, 
+        "src": "girl1"
+    },
+    {
+        "type": "girl",
+        "active": false, 
+        "src": "girl2"
+    },
+    {
+        "type": "girl",
+        "active": false, 
+        "src": "girl3"
+    },
+    {
+        "type": "girl",
+        "active": false, 
+        "src": "girl4"
+    },
+    {
+        "type": "girl",
+        "active": false, 
+        "src": "girl5"
+    },
+    {
+        "type": "girl",
+        "active": false, 
+        "src": "girl6"
+    },
+    {
+        "type": "boy",
+        "active": false, 
+        "src": "boy1"
+    },
+    {
+        "type": "boy",
+        "active": false, 
+        "src": "boy2"
+    },
+    {
+        "type": "boy",
+        "active": false, 
+        "src": "boy3"
+    },
+    {
+        "type": "boy",
+        "active": false, 
+        "src": "boy4"
+    },
+    {
+        "type": "boy",
+        "active": false, 
+        "src": "boy5"
+    },
+    {
+        "type": "boy",
+        "active": false, 
+        "src": "boy6"
+    }
+]

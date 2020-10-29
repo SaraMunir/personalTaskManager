@@ -1,12 +1,12 @@
 import React, { useState, useRef} from 'react';
 import { Redirect } from 'react-router-dom';
+import Loader from  "./assets/Rolling-1s-200px.gif";
 
 function SignUp() {
     const [ userData, setUserData ] = useState({ firstName: "", lastName: "", email: "", password: "", passCode: ""});
     const [ isRegistered, setIsRegistered ] = useState( false );
-
     const [ alertMessage, setAlertMessage ] = useState( { type: "", message: ""} );
-
+    const [loading, setLoading] = useState(false);
     const inputFirstName = useRef();
     const inputLastName = useRef();
     const inputEmail = useRef();
@@ -51,12 +51,13 @@ function SignUp() {
             setAlertMessage( { type: 'danger', message: 'Please provide a 4 or 6 digit passcode!' } );
             return;
         }
-        if( userData.passCode.length == 4 || userData.passCode.length == 6 ) {
+        if( userData.passCode.length < 4 || userData.passCode.length > 6 ) {
             inputPassCode.current.focus();
             setAlertMessage( { type: 'danger', message: 'Please make sure the passcode is  4 or 6 digit!' } );
             return;
         }
         localStorage.clear();
+        setLoading(true)
         const apiResult = await fetch('/api/user/registration', 
             {   method: 'post',
                 headers: {
@@ -68,15 +69,23 @@ function SignUp() {
         
         if( apiResult.message ){
             setAlertMessage( { type: 'success', message: 'Thank you successfully registered!' } );
-            setTimeout( function(){ setIsRegistered(true); }, 1000 );
+            setLoading(false)
+            setTimeout( function(){ setIsRegistered(true); }, 500 );
         } else {
+            setLoading(false)
             setAlertMessage( { type: 'danger', message: 'Try again' } );
         }
         setUserData({ firstName: "", lastName: "", email: "", password: ""})
+        setLoading(false)
     }
     return (
         <div class="container card mt-4 col-md-8">
             { isRegistered ? <Redirect to='/LogIn' /> : '' }
+            <div className={loading === true ? "loaderWindow": "hide"}>
+                <div className="loadingWnd">
+                    <img className="loadingGif" src={Loader} alt="loadingWndow"/>
+                </div>
+            </div>
             <div className={ alertMessage.type ? `alert alert-${alertMessage.type}` : 'd-hide' } role="alert">
                 {alertMessage.message}
             </div>

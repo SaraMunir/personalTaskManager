@@ -39,7 +39,6 @@ async function registerUser( userData ){
 }
 //login:
 async function loginUser( email, password ) {
-    // console.log('in orm.mongoose is login working')
     const userData = await db.users.findOne({ email: email });
     if( !userData ) {
         return { error: "Couldn't find that email. Register or try again!" };
@@ -54,7 +53,7 @@ async function loginUser( email, password ) {
         firstName: userData.firstName,
         lastName: userData.lastName,
         email: userData.email,
-        profileImg: userData.profileImg,
+        profileImgClass: userData.profileImgClass,
     };
 }
 //login:
@@ -78,24 +77,15 @@ async function postTasks( userTasks ){
     const addTask = await db.users.findOneAndUpdate({ _id: userTasks.userId }, { $push: {tasks: taskInfo} });
     return {message: "phase added successfully!!"}
 }
-async function getTasks(userId){
-    console.log( 'in orm userId', userId)
-    const getTaskLists = await db.users.findOne({ _id: userId});
-    console.log('in orm: ', getTaskLists)
-    return getTaskLists.tasks;
-}
 async function postBackLogTask( userTasks ){
-    console.log('in orm ', userTasks)
     const taskInfo = {
         'taskName': `${userTasks.taskName}`,
         'taskType': `${userTasks.taskType}`,
-        // 'completionDate': `${userTasks.completionDate}`
     }
     const addTask = await db.users.findOneAndUpdate({ _id: userTasks.userId }, { $push: {myBackLog: taskInfo} });
     return {message: "phase added successfully!!"}
 }
 async function postBucket( userTasks ){
-    console.log('in orm ', userTasks)
     const bucketInfo = {
         'adminId': `${userTasks.userId}`,
         'bucketName': `${userTasks.bucketName}`,
@@ -110,8 +100,6 @@ async function getBuckets(userId){
     return getBucketList;
 }
 async function postMembersBucket( bucketData ){
-    console.log('in orm memberbucke data is: ', bucketData)
-// bucketName: "", bucketOwner: memberName, bucketOwnerId: memberId, userId: localStorage.id
     const saveData = {
         bucketName: bucketData.bucketName,
         bucketOwner: bucketData.bucketOwner,
@@ -122,7 +110,6 @@ async function postMembersBucket( bucketData ){
     return {message: "bucket added successfully!!"}
 }
 async function postBucketList( userTasks ){
-    console.log('in orm ', userTasks)
     const taskData = {
         'taskName': `${userTasks.taskName}`,
         'taskOwner': `${userTasks.taskOwner}`,
@@ -138,7 +125,6 @@ async function postBucketList( userTasks ){
     return {message: "phase added successfully!!"}
 }
 async function postBucketListWithoutDelete( userTasks ){
-    console.log('in orm ', userTasks);
     const taskData = {
         'taskName': `${userTasks.taskName}`,
         'taskOwner': `${userTasks.taskOwner}`,
@@ -149,8 +135,13 @@ async function postBucketListWithoutDelete( userTasks ){
         { $push: {"bucketTasks": taskData} });
     return {message: "phase added successfully!!"}
 }
+async function deleteTaskFromBucket( taskData ){
+    const deleteTask = await db.myBucket.findOneAndUpdate(
+        { _id: taskData.bucketId}, 
+        { $pull: {"bucketTasks": {_id : taskData.taskItm._id}} });
+    return {message: "task deleted!!"}
+}
 async function assignOwnertoTask( userTasks ){
-    console.log('in orm ', userTasks)
     const taskData = {
         'taskName': `${userTasks.taskName}`,
     };
@@ -163,13 +154,6 @@ async function assignOwnertoTask( userTasks ){
     } });
     return {message: "phase added successfully!!"}
 }
-
-async function getBackLogTask(userId){
-    console.log( 'in orm userId', userId)
-    const getTaskLists = await db.users.findOne({ _id: userId});
-    console.log('in orm: ', getTaskLists)
-    return getTaskLists.tasks;
-}
 async function getBacklogLists(userId){
     const getBackList = await db.users.findOne({ _id: userId});
     return getBackList;
@@ -178,13 +162,13 @@ async function getMemberList(userId){
     const getMemberList = await db.users.findOne({ _id: userId});
     return getMemberList.myHouseMembers;
 }
-
 async function getMemberList2(userId){
     const getMemberList2 = await db.houseMembers.find({ adminId: userId});
     return getMemberList2;
 }
 //adding members
 async function postMember( member ){
+    console.log('in orm member: ', member)
     const membData = {
         'adminId': `${member.userId}`,
         'name': `${member.membName}`,
@@ -192,8 +176,9 @@ async function postMember( member ){
         'membSex': `${member.membSex}`,
         'timeTrack': `${member.timeTrack}`,
         'profileImg': `${member.profileImg}`,
+        'profileImgClass': `${member.profileImgClass}`,
     };
-    const dbHouseMembers = new db.houseMembers( membData );
+    const dbHouseMembers = new db.houseMembers( membData);
     const saveHouseMembers = await dbHouseMembers.save();
     return { 
         message: "member successfully created", 
@@ -239,6 +224,7 @@ async function cancelTrackMember(membId){
     );
     return cancelTrackMember
 }
+// not sure if needed anymore
 async function getDoLists(userId){
     const getDoList = await db.users.findOne({ _id: userId});
     const doListArr=[];
@@ -279,11 +265,36 @@ async function completeBuckTask(bucketTask){
 
     return { message: "changes to Do"};
 }
+async function changeOwnertoTask( chngObj ){
+    const assignOwner = await db.myBucket.findOneAndUpdate(
+        { _id: chngObj.bucketId, "bucketTasks._id": chngObj.bucketTskId}, 
+        { $set: {
+            "bucketTasks.$.taskOwner": chngObj.memberName,
+            "bucketTasks.$.taskOwnerId": chngObj.memberId,
+    } });
+    return {message: "owner changed"}
+}
+async function deleteBcktTask( deletObj ){
+    const deleteTsk = await db.myBucket.findOneAndUpdate(
+        { _id: deletObj.bucketId}, 
+        { $pull: {"bucketTasks": {_id : deletObj.bucketTskId}} });
+    return {message: "task deleted!!"}
+}
+async function deleteBukt( deletObj ){
+    const deleteTsk = await db.myBucket.deleteOne(
+        { _id: deletObj.bucketId});
+    return {message: "bucket deleted!!"}
+}
+async function addBucketTask( addTaskObj ){
+    const addTask = await db.myBucket.findOneAndUpdate(
+        { _id: addTaskObj.bucketId}, 
+        { $push: {"bucketTasks": {taskName: addTaskObj.taskName}} });
+    return {message: "task added!!"}
+}
 async function bucketStatus(bucketId){
     const changeBucketStatus = await db.myBucket.findOneAndUpdate(
         { _id: bucketId}, 
         { "$set": { "active": true }}, { safe: true, multi:true }, function(err, obj) {
-        console.log('what is the error? ',err)
     }
     );
     return { message: "changes to Do"};
@@ -302,35 +313,33 @@ async function memberBucket(memberId){
     return(memberBucket);
 }
 
-async function moveDoToDoing(userId, taskId){
-    const changeDoToFalse = await db.users.updateOne(
-        { _id:  userId, "tasks._id": taskId}, 
-        { "$set": { "tasks.$.taskDo": "false" }}, { safe: true, multi:true }, function(err, obj) {
-        console.log('what is it? ',err)
-    });
-    const changeDoingToTrue = await db.users.updateOne(
-        { _id:  userId, "tasks._id": taskId}, 
-        { "$set": { "tasks.$.taskDoing": "true" }}, { safe: true, multi:true }, function(err, obj) {
-        console.log('what is it? ',err)
-    });
-    return { message: "Task Moved to Do"};
-}
-async function moveDoingToDone(userId, taskId){
-    const changeDoingToFalse = await db.users.updateOne(
-        { _id:  userId, "tasks._id": taskId}, 
-        { "$set": { "tasks.$.taskDoing": "false" }}, { safe: true, multi:true }, function(err, obj) {
-        console.log('what is it? ',err)
-    });
-    const changeDoneToTrue = await db.users.updateOne(
-        { _id:  userId, "tasks._id": taskId}, 
-        { "$set": { "tasks.$.taskDone": "true" }}, { safe: true, multi:true }, function(err, obj) {
-        console.log('what is it? ',err)
-    });
-    return { message: "Task Moved to Do"};
+// async function moveDoToDoing(userId, taskId){
+//     const changeDoToFalse = await db.users.updateOne(
+//         { _id:  userId, "tasks._id": taskId}, 
+//         { "$set": { "tasks.$.taskDo": "false" }}, { safe: true, multi:true }, function(err, obj) {
+//         console.log('what is it? ',err)
+//     });
+//     const changeDoingToTrue = await db.users.updateOne(
+//         { _id:  userId, "tasks._id": taskId}, 
+//         { "$set": { "tasks.$.taskDoing": "true" }}, { safe: true, multi:true }, function(err, obj) {
+//         console.log('what is it? ',err)
+//     });
+//     return { message: "Task Moved to Do"};
+// }
+// async function moveDoingToDone(userId, taskId){
+//     const changeDoingToFalse = await db.users.updateOne(
+//         { _id:  userId, "tasks._id": taskId}, 
+//         { "$set": { "tasks.$.taskDoing": "false" }}, { safe: true, multi:true }, function(err, obj) {
+//         console.log('what is it? ',err)
+//     });
+//     const changeDoneToTrue = await db.users.updateOne(
+//         { _id:  userId, "tasks._id": taskId}, 
+//         { "$set": { "tasks.$.taskDone": "true" }}, { safe: true, multi:true }, function(err, obj) {
+//         console.log('what is it? ',err)
+//     });
+//     return { message: "Task Moved to Do"};
 
-}
-
-
+// }
 //complete personal task
 async function completePrsnlTsk(membId, personalTskId){
     const changeBucketStatus = await db.houseMembers.updateOne(
@@ -353,6 +362,27 @@ async function updatePassCode( userId, passWordData  ){
         message: "Member Password successfully Updated", 
     };
 }
+async function changeMyAvatar( userId, avatarData  ){
+    console.log('in orm : ', avatarData)
+    const changeMyAvatarAvatar = await db.users.findOneAndUpdate(
+        { _id: userId},
+            { "$set": {profileImgClass: avatarData.profileImgClass}}
+    );
+    return { 
+        message: "Avatar successfully Updated", 
+    };
+}
+async function changeMembAvatar( membId, avatarData  ){
+    // console.log('in orm : ', avatarData)
+    const changeMembAvatarAvatar = await db.houseMembers.findOneAndUpdate(
+        { _id: membId},
+            { "$set": {profileImgClass: avatarData.profileImgClass}}
+    );
+    return { 
+        message: "Avatar successfully Updated", 
+    };
+}
+
 
 async function addBucketToDashboard(userId, bucketId){
 
@@ -413,12 +443,51 @@ async function getMyGroceryItms(userId){
     const getMyGroceryItms = await db.myGroceryItems.find({ ownerId: userId});
     return getMyGroceryItms;
 }
+// deleteFromMyList
+async function deleteFromMyList(id){
+    const deleteFromMyList = await db.myGroceryItems.deleteOne({ "_id": id});
+    return deleteFromMyList;
+}
 
 
 
+async function createShoppingList( listData ){
+    const myShoppingList = new db.myShoppingList( listData );
+    const saveShoppingList = await myShoppingList.save();
+    return {message: "success"}
+}
+async function getMyShoppingList(userId){
+    const getMyShoppingList = await db.myShoppingList.find({ ownerId: userId});
+    return getMyShoppingList;
+}
 
 
+async function deleteMyShoppingList(listId){
+    const deleteMyShoppingList = await db.myShoppingList.deleteOne({
+        "_id" : listId
+    })
+    return deleteMyShoppingList
+}
 
+async function completeShippingTask(bucketTask){
+    const listId = bucketTask.listId
+    const listItemId = bucketTask.listItemId
+    console.log("bucketTask: ", bucketTask)
+    const completeTask = await db.myShoppingList.findOneAndUpdate(
+        { _id: listId, "list._id": listItemId}, 
+        { $set: {"list.$.done": true} });
+
+    return { message: "changes to Do"};
+}
+async function completeShoppingList(listId){
+    const completeShoppingList = await db.myShoppingList.findOneAndUpdate(
+        {"_id" : listId},
+        { $set: {"completed": true}}
+        )
+    return completeShoppingList
+}
+
+// { "$set": {timeTrack: true}}
 
 
 
@@ -450,8 +519,8 @@ module.exports = {
     getDoLists,
     getDoingLists,
     getDoneLists,
-    moveDoToDoing,
-    moveDoingToDone,
+    // moveDoToDoing,
+    // moveDoingToDone,
     postPersonalTsk,
     completePrsnlTsk,
     loginPassCode,
@@ -465,5 +534,18 @@ module.exports = {
     removeFromDashboard,
 
     addItemToMyList,
-    getMyGroceryItms
+    getMyGroceryItms,
+    deleteFromMyList,
+    createShoppingList,
+    deleteTaskFromBucket,
+    changeOwnertoTask, 
+    deleteBcktTask,
+    addBucketTask,
+    deleteBukt,
+    getMyShoppingList,
+    deleteMyShoppingList,
+    completeShippingTask,
+    completeShoppingList, 
+    changeMyAvatar,
+    changeMembAvatar
 }

@@ -177,24 +177,40 @@ code {
   border: 1px solid rgb(140, 141, 98);
 }
 .myList{
-  background: #f3f3f3;
+  background: #fbfbfb;
   min-height: 55px;
   margin: 5px;
-  border-radius: 50px;
+  border-radius: 5px;
   list-style: none;
-  padding: 15px;
-  filter: drop-shadow(2px 2px 2px #919191);
+  padding: 8px;
+  /* filter: drop-shadow(2px 2px 2px #919191); */
+  box-shadow: 2px 2px 2px #919191;
 }
 .myListDone2{
   background: #c7c7c7;
   min-height: 55px;
   margin: 5px;
-  border-radius: 50px;
+  /* border-radius: 50px; */
   list-style: none;
   padding: 15px;
-  filter: drop-shadow(2px 2px 2px #919191);
+  box-shadow: 2px 2px 2px #919191;
 }
-
+.myListDone{
+  background: #969696;
+  min-height: 56px;
+  margin: 5px;
+  border-radius: 5px;
+  list-style: none;
+  padding: 8px;
+  text-decoration: line-through;
+  box-shadow: 2px 2px 2px #919191;
+}
+.myList:hover{
+  background: #ffffff;
+  box-shadow: 2px 2px 2px #919191;
+  
+  /* padding: 20px; */
+}
 .myInput{
   background: #f3f3f3;
   min-height: 55px;
@@ -220,22 +236,7 @@ code {
   /* background: #fdfdfd; */
   border-style: none;
 }
-.myListDone{
-  background: #969696;
-  min-height: 70px;
-  margin: 5px;
-  border-radius: 50px;
-  list-style: none;
-  padding: 15px;
-  text-decoration: line-through;
-  filter: drop-shadow(2px 2px 2px #919191);
-}
-.myList:hover{
-  background: #ffffff;
-  filter: drop-shadow(2px 2px 2px #a8a8a8);
-  
-  /* padding: 20px; */
-}
+
 .mainBox{
   background: #dad2ec;
   padding-top: 20px;
@@ -250,7 +251,7 @@ code {
 .newCardLg{
   background: #ffffff;
   padding: 20px;
-  border-radius: 15px;
+  border-radius: 10px;
   margin: 5px auto;
   box-shadow: 2px 5px 5px #777281;
 }
@@ -292,7 +293,7 @@ code {
 }
 .myBtn{
   background: #876fb9;
-  padding: 10px;
+  padding: 8px;
   border-style: none;
   color: white;
 }
@@ -349,8 +350,8 @@ code {
   z-index: 1000;
 }
 .membThmSmall{
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   object-fit: cover;
   cursor: pointer;
@@ -368,10 +369,8 @@ code {
   border: 5px solid rebeccapurple;
   border-radius: 10px;
 }
-
-/* GROCERY */
 .groceryImg{
-  width: 15vh;
+  width: 12vh;
   margin: 0 auto;
   margin: 5px;
 }
@@ -396,6 +395,16 @@ code {
   background: #ebebeb;
   border-radius: 5px;
 }
+.groceryHeight{
+  padding: 10px;
+  height: 90vh;
+  overflow-y: scroll;
+}
+.avatarsHeight{
+  width: 100%;
+  height: 85vh;
+  overflow-y: scroll;
+}
 .myInput2{
   width: 100%;
   padding: 10px 20px;
@@ -408,8 +417,8 @@ code {
   outline: #a8a8a800;
 }
 .incomplete{
-  height: 40vh;
-  background: #d6d6d6;
+  
+  height: 50vh;
   border-radius: 5px;
   padding: 10px;
   overflow-y: scroll;
@@ -420,12 +429,36 @@ code {
   overflow-anchor: auto;
 }
 .completed{
-  height: 40vh;
+  height: 30vh;
+  border-radius: 5px;
+  padding: 10px;
   overflow-y: scroll;
+  background: #ebebeb;
+}
+.detailTaskLst{
+  border-radius: 5px;
+  padding: 5px 0px;
+  height: 75vh;
+  background: #ebebeb;
+  overflow-y: scroll;
+}
+.taskDetailWnd{
+  height: 100vh;
 }
 .onHvr{
   color: #8fd12b;
   cursor: pointer;
+}
+.onHvrPr{
+  /* color: #9b54d6; */
+  cursor: pointer;
+  cursor: pointer;
+}
+.onHvrPr:hover{
+  color: #ab73da;
+  cursor: pointer;
+  font-weight: bold;
+
 }
 .onHvrGrey{
   color: #a599ad;
@@ -447,11 +480,36 @@ code {
 .groceryListItm p {
   margin: 0;
 }
+.timesIcn{
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  padding: 3px 5px;
+  color: #00800000;
+  transition: .5s ease-in all;
+  border: 2px solid #6e5e9600;
+}
+.groceryListItm:hover .timesIcn{
+  color: #906de0;
+} 
+.timesIcn:hover{
+  /* border: 2px solid #5d5868; */
+  border: 2px solid #6e5e96;
+  color: white;
+}
 .fruitInp{
   cursor: text;
   border: none;
   outline: none;
   padding: 2px 10px;
+}
+.noColor{
+  background: none;
+  cursor: text;
+  border: none;
+  outline: none;
+  padding: 2px 10px;
+
 }
 .fruitInp:hover{
   background: #b2acbd;
@@ -459,7 +517,7 @@ code {
 }
 .anotherList{
   width: 35%;
-  height: 100vh;
+  height: 200vh;
   position: absolute;
   top: 60px;
   right: 0;
@@ -488,6 +546,7 @@ code {
   margin: 0px;
   padding-top: 20px;
   background: #fdfdfd;
+  /* cursor: text; */
 }
 .heroLine{
   width: 60%;
@@ -677,14 +736,29 @@ z-index: 300;
   position: relative;
 }
 .hoverName{
-  min-width: 120px;
+  font-size: .8rem;
+  min-width: 85px;
   visibility: hidden;
-  padding: 10px;
+  padding: 5px;
   background: #d1b566;
   position: absolute;
   z-index: 300;
-  top: -50px;
-  right: 0;
+  top: -20px;
+  right: 30px;
+  outline: none;
+  color: white;
+  border-radius: 4px;
+  text-align: center;
+}
+.hoverName2{
+  min-width: 80px;
+  visibility: hidden;
+  padding: 10px;
+  background: #26c7c7;
+  position: absolute;
+  z-index: 300;
+  /* top: -65px; */
+  right: 45px;
   outline: none;
   border: none;
   color: white;
@@ -699,7 +773,7 @@ z-index: 300;
   outline: none;
   border: none;
 }
-.hoverNmSh:hover .hoverName{
+.hoverNmSh:hover .hoverName, .hoverNmSh:hover .hoverName2{
   visibility: visible;
 }
 .listHeight{
@@ -707,10 +781,16 @@ z-index: 300;
   height: 80vh;
   overflow-y: scroll;
 }
+.dropDnHght{
+  height: 70vh;
+  overflow-y: scroll;
+
+}
 .bucketsCntnr{
   width: 100%;
   background: #938ba0b4;
   padding: 10px 0;
+  min-height: 100vh;
 }
 .buckets{
   width: 32%;
@@ -726,17 +806,38 @@ z-index: 300;
   box-shadow: 2px 5px 10px #bab6c4af;
   border-radius: 5px;
 }
+.bucketTasksDone{
+  background: #938ba0b4;
+  padding: 15px;
+  margin: 15px auto;
+  box-shadow: 2px 5px 10px #bab6c4af;
+  border-radius: 5px;
+}
 .buckTaskCnt{
   background:  #a29caf27;
   /* padding: 5px; */
   height: 70vh;
   overflow-y: hidden;
 }
-.buckTaskCnt:hover{
+.buckTaskCnt:hover, .shoppingCntr:hover{
   overflow-y: scroll;
 }
-.buckTaskCnt::-webkit-scrollbar, .groceryListGroup::-webkit-scrollbar{
-  border-radius: 5px;
+.shoppingCntr{
+  height: 70vh;
+  overflow-y: hidden;
+}
+
+.buckTaskCnt::-webkit-scrollbar, 
+.groceryListGroup::-webkit-scrollbar,
+.shoppingCntr::-webkit-scrollbar, .incomplete::-webkit-scrollbar, 
+.completed::-webkit-scrollbar, .listHeight::-webkit-scrollbar,
+.compareWindow::-webkit-scrollbar,
+.detailTaskLst::-webkit-scrollbar,
+.dropDnHght::-webkit-scrollbar,
+.groceryHeight::-webkit-scrollbar,
+.avatarsHeight::-webkit-scrollbar
+{
+  border-radius: 3px;
   width: 8px;
   background:  #a29caf27;
 }
@@ -752,13 +853,31 @@ z-index: 300;
 .groceryListGroup:hover{
   overflow-y: scroll;
 }
-.buckTaskCnt::-webkit-scrollbar-thumb ,  .groceryListGroup::-webkit-scrollbar-thumb {
+.buckTaskCnt::-webkit-scrollbar-thumb ,  
+.groceryListGroup::-webkit-scrollbar-thumb,
+.shoppingCntr::-webkit-scrollbar-thumb, 
+.incomplete::-webkit-scrollbar-thumb, 
+.completed::-webkit-scrollbar-thumb,
+.listHeight::-webkit-scrollbar-thumb,
+.compareWindow::-webkit-scrollbar-thumb,
+.detailTaskLst::-webkit-scrollbar-thumb,
+.dropDnHght::-webkit-scrollbar-thumb,
+.groceryHeight::-webkit-scrollbar-thumb,
+.avatarsHeight::-webkit-scrollbar-thumb
+ {
   background: #a894d1; 
-  border-radius: 5px;
+  border-radius: 3px;
 }
 
 
 .toDoBtn{
+  width: 15px;
+  height: 15px;
+  border-radius: 10px;
+  box-shadow: 1px 2px 6px #7772816e;
+}
+.toDoBtnDone{
+  background: #c2afe9;
   width: 15px;
   height: 15px;
   border-radius: 10px;
@@ -778,4 +897,239 @@ z-index: 300;
   right: 0;
   left: 0;
   bottom: 0;
+}
+.compareWindow{
+  width: 100%;
+  background: rgb(219, 205, 236);
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 100;
+  padding: 20px 5px;
+  height: 100%;
+  overflow-y: scroll;
+}
+
+.loaderWindow{
+  width: 100%;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 2050;
+  margin: 0 auto;
+  background: #bf91dd6e;
+}
+.loadingGif{
+  width: 100px;
+  height: 100px;
+  margin: auto;
+  object-fit: cover;
+}
+.loadingWnd{
+  width: 100px;
+  height: 100px;
+  margin: 200px auto;
+}
+.compareContnr{
+  /* height: 95vh; */
+  min-height: 200vh;
+}
+.box{
+  width: 50%;
+  height: 50vh;
+  border: 2px solid rebeccapurple;
+}
+
+.listWdth{
+  width: 100%;
+}
+.addBtn{
+  cursor: pointer;
+}
+.addBtn:hover{
+  background: #a894d1;
+  color: white;
+}
+.addBtn:active{
+  background: #7f5bc5;
+  color: white;
+}
+.listItem{
+  padding: 7px 16px;
+}
+.statusBtn{
+  font-size: .75rem;
+}
+.myInputFrm{
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+.myInputCnt{
+  /* width: 90%; */
+}
+.addBtn{
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+.taskDetailWnd {
+  position: sticky;
+  height: 100vh;
+  top: 0;
+  right: 0;
+}
+.avatarImg{
+  height: 30vh;
+  width: 30vh;
+}
+.animal1{
+  background-image: url(./components/assets/avatars/animal1.png);
+  background-size: cover;
+}
+.animal2{
+  background-image: url(./components/assets/avatars/animal2.png);
+  background-size: cover;
+}
+.animal3{
+  background-image: url(./components/assets/avatars/animal3.png);
+  background-size: cover;
+}
+.animal4{
+  background-image: url(./components/assets/avatars/animal4.png);
+  background-size: cover;
+}
+.animal5{
+  background-image: url(./components/assets/avatars/animal5.png);
+  background-size: cover;
+}
+.animal6{
+  background-image: url(./components/assets/avatars/animal6.png);
+  background-size: cover;
+}
+.animal7{
+  background-image: url(./components/assets/avatars/animal7.png);
+  background-size: cover;
+}
+.animal8{
+  background-image: url(./components/assets/avatars/animal8.png);
+  background-size: cover;
+}
+.avatarActive{
+  border: 4px solid white;
+  background: #a894d1;
+  border-radius: 50%;
+}
+.female1{
+  background-image: url(./components/assets/avatars/female1.png);
+  background-size: cover;
+}
+.female2{
+  background-image: url(./components/assets/avatars/female2.png);
+  background-size: cover;
+}
+.female3{
+  background-image: url(./components/assets/avatars/female3.png);
+  background-size: cover;
+}
+.female4{
+  background-image: url(./components/assets/avatars/female4.png);
+  background-size: cover;
+}
+.female5{
+  background-image: url(./components/assets/avatars/female5.png);
+  background-size: cover;
+}
+.female6{
+  background-image: url(./components/assets/avatars/female6.png);
+  background-size: cover;
+}
+.female7{
+  background-image: url(./components/assets/avatars/female7.png);
+  background-size: cover;
+}
+.female8{
+  background-image: url(./components/assets/avatars/female8.png);
+  background-size: cover;
+}
+.male1{
+  background-image: url(./components/assets/avatars/male1.png);
+  background-size: cover;
+}
+.male2{
+  background-image: url(./components/assets/avatars/male2.png);
+  background-size: cover;
+}
+.male3{
+  background-image: url(./components/assets/avatars/male3.png);
+  background-size: cover;
+}
+.male4{
+  background-image: url(./components/assets/avatars/male4.png);
+  background-size: cover;
+}
+.male5{
+  background-image: url(./components/assets/avatars/male5.png);
+  background-size: cover;
+}
+.male6{
+  background-image: url(./components/assets/avatars/male6.png);
+  background-size: cover;
+}
+.male7{
+  background-image: url(./components/assets/avatars/male7.png);
+  background-size: cover;
+}
+.male8{
+  background-image: url(./components/assets/avatars/male8.png);
+  background-size: cover;
+}
+.girl1{
+  background-image: url(./components/assets/avatars/girl1.png);
+  background-size: cover;
+}
+.girl2{
+  background-image: url(./components/assets/avatars/girl2.png);
+  background-size: cover;
+}
+.girl3{
+  background-image: url(./components/assets/avatars/girl3.png);
+  background-size: cover;
+}
+.girl4{
+  background-image: url(./components/assets/avatars/girl4.png);
+  background-size: cover;
+}
+.girl5{
+  background-image: url(./components/assets/avatars/girl5.png);
+  background-size: cover;
+}
+.girl6{
+  background-image: url(./components/assets/avatars/girl6.png);
+  background-size: cover;
+}
+.boy1{
+  background-image: url(./components/assets/avatars/boy1.png);
+  background-size: cover;
+}
+.boy2{
+  background-image: url(./components/assets/avatars/boy2.png);
+  background-size: cover;
+}
+.boy3{
+  background-image: url(./components/assets/avatars/boy3.png);
+  background-size: cover;
+}
+.boy4{
+  background-image: url(./components/assets/avatars/boy4.png);
+  background-size: cover;
+}
+.boy5{
+  background-image: url(./components/assets/avatars/boy5.png);
+  background-size: cover;
+}
+.boy6{
+  background-image: url(./components/assets/avatars/boy6.png);
+  background-size: cover;
 }

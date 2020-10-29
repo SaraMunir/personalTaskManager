@@ -36,6 +36,19 @@ app.post('/api/user/passCode', async function( req,res ){
     res.send( loginPassCode );
 });
 
+app.post('/api/changeMyAvatar/:userId', async function( req,res ){
+    const userId = req.params.userId;
+    const avatarData = req.body;
+    const changeMyAvatar = await orm.changeMyAvatar( userId, avatarData);
+    res.send(changeMyAvatar);
+})
+app.post('/api/changeMemberAvatar/:membId', async function( req,res ){
+    const membId = req.params.membId;
+    const avatarData = req.body;
+    const changeMembAvatar = await orm.changeMembAvatar( membId, avatarData);
+    res.send(changeMembAvatar);
+})
+
 app.post('/api/addTask', async function( req,res ){
     // const userId = req.params.userId;
     const userTasks = req.body;
@@ -109,7 +122,7 @@ app.get('/api/userInfo/:userId', async (req,res)=>{
     const fetchUser = await orm.getUserInfo(userId);
     res.json(fetchUser);
 })
-//creating members
+//....creating members
 app.post('/api/member', async function( req,res ){
     const userEmployee = req.body;
     const postMember = await orm.postMember( userEmployee );
@@ -122,10 +135,21 @@ app.post('/api/bucketTaskList', async function( req,res ){
 })
 app.post('/api/bucketTaskList/Recurring', async function( req,res ){
     const userEmployee = req.body;
-    // console.log('in server:', userEmployee)
     const postBucketListWithoutDelete = await orm.postBucketListWithoutDelete( userEmployee );
     res.send(postBucketListWithoutDelete);
 })
+
+app.post('/api/addBucketTask', async function( req,res ){
+    const taskData = req.body;
+    const addBucketTask = await orm.addBucketTask( taskData );
+    res.send(addBucketTask);
+})
+app.post('/api/deleteTaskFromOldBucket', async function( req,res ){
+    const taskData = req.body;
+    const deleteTaskFromBucket = await orm.deleteTaskFromBucket( taskData );
+    res.send(deleteTaskFromBucket);
+})
+
 app.post('/api/assignOwnertoTask', async function( req,res ){
     const taskObj = req.body;
     console.log('in server assigning obj received is:', taskObj)
@@ -196,12 +220,12 @@ app.put("/api/moveToDoing/:userId/:taskId", async (req, res) => {
     const moveDoToDoing = await orm.moveDoToDoing(userId, taskId);
     res.send(moveDoToDoing);
     });
-app.put("/api/moveToDone/:userId/:taskId", async (req, res) => {
-    const userId = req.params.userId;
-    const taskId = req.params.taskId;
-    const moveDoingToDone = await orm.moveDoingToDone(userId, taskId);
-    res.send(moveDoingToDone);
-    });
+// app.put("/api/moveToDone/:userId/:taskId", async (req, res) => {
+//     const userId = req.params.userId;
+//     const taskId = req.params.taskId;
+//     const moveDoingToDone = await orm.moveDoingToDone(userId, taskId);
+//     res.send(moveDoingToDone);
+//     });
 
 //   /api/moveToDoing/${userId}/${taskId}
 
@@ -266,4 +290,69 @@ app.get('/api/loadMyList/:userId', async (req,res)=>{
     const getMyGroceryItms = await orm.getMyGroceryItms(userId);
     // console.log('in servers: ')
     res.json(getMyGroceryItms);
+})
+    // /api/loadMyList/${userId}
+app.get('/api/loadMyShoppingList/:userId', async (req,res)=>{
+    const userId = req.params.userId;
+    const getMyShoppingList = await orm.getMyShoppingList(userId);
+    // console.log('in servers: ')
+    res.json(getMyShoppingList);
+})
+//DELETE MEMBER
+app.get('/api/deleteFromMyList/:id', async (req,res)=>{
+    const id = req.params.id;
+    const deleteFromMyList = await orm.deleteFromMyList(id);
+    res.json(deleteFromMyList);
+})
+// 
+
+// creating shopping list
+app.post("/api/createMyShoppingList", async (req, res) => {
+    const listData = req.body;
+    const createShoppingList = await orm.createShoppingList(listData);
+    res.send(createShoppingList);
+    });
+
+    //    res.send( loginResult );
+
+//   /api/changeOwner
+app.post('/api/changeOwner', async function( req,res ){
+    const chngObj = req.body;
+    console.log('in server assigning obj received is:', chngObj)
+    const changeOwnertoTask = await orm.changeOwnertoTask( chngObj );
+    res.send(changeOwnertoTask);
+})
+//   /api/deleteBucketTask
+app.post('/api/deleteBucketTask', async function( req,res ){
+    const deleteObj = req.body;
+    console.log('in server assigning obj received is:', deleteObj)
+    const deleteBcktTask = await orm.deleteBcktTask( deleteObj );
+    res.send(deleteBcktTask);
+})
+//   /api/deleteBucket
+app.post('/api/deleteBucket', async function( req,res ){
+    const deleteBktObj = req.body;
+    const deleteBukt = await orm.deleteBukt( deleteBktObj );
+    res.send(deleteBukt);
+})
+
+//DELETE MEMBER
+app.get('/api/deleteMyShoppingList/:listId', async (req,res)=>{
+    const listId = req.params.listId;
+    const deleteMyShoppingList = await orm.deleteMyShoppingList(listId);
+    res.json(deleteMyShoppingList);
+})
+
+app.post('/api/completingShoppingList', async function( req,res ){
+    // const userId = req.params.userId;
+    const userTasks = req.body;
+    const completeShippingTask = await orm.completeShippingTask( userTasks);
+    res.send(completeShippingTask);
+})
+
+//DELETE MEMBER
+app.get('/api/completeShoppingList/:shopId', async (req,res)=>{
+    const shopId = req.params.shopId;
+    const completeShoppingList = await orm.completeShoppingList(shopId);
+    res.json(completeShoppingList);
 })
