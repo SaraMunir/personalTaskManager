@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import WelcomePage from './components/WelcomPage';
 import LogIn from './components/LogIn'
 import SignUp from './components/SignUp'
-
 import MemberProfile from './components/MemberProfile';
 import LogOut from './components/LogOut';
 import Profiles from './components/Profiles'

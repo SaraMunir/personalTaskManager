@@ -220,18 +220,7 @@ app.put("/api/moveToDoing/:userId/:taskId", async (req, res) => {
     const moveDoToDoing = await orm.moveDoToDoing(userId, taskId);
     res.send(moveDoToDoing);
     });
-// app.put("/api/moveToDone/:userId/:taskId", async (req, res) => {
-//     const userId = req.params.userId;
-//     const taskId = req.params.taskId;
-//     const moveDoingToDone = await orm.moveDoingToDone(userId, taskId);
-//     res.send(moveDoingToDone);
-//     });
 
-//   /api/moveToDoing/${userId}/${taskId}
-
-
-
-/////moving task from do to doing:
 app.put("/api/completePrsnlTsk/:memberId/:prsnlTskId", async (req, res) => {
     const memberId = req.params.memberId;
     const prsnlTskId = req.params.prsnlTskId;
