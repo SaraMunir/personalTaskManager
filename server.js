@@ -9,11 +9,15 @@ const app = express();
  
 var server = app.listen( PORT, function(){ console.log( `[MyFamilyTask], http://localhost:${PORT}` ); });
 // app.use( express.static('client/build/') );
-app.use( express.static(path.join(__dirname, 'client/build'))) ;
-app.use(express.static(path.join(__dirname, "client/src/components/Grocery")));
+
 app.use( express.urlencoded({ extended: false }) );
 app.use( express.json() );
+app.use( express.static(path.join(__dirname, 'build'))) ;
+
+
+app.use(express.static(path.join(__dirname, "client/src/components/Grocery")));
 app.use(express.static(path.join(__dirname, "client/src/components/assets")));
+
 //Registration: 
 app.post('/api/user/registration', async function( req,res ){
     console.log('in server file: ', req.body)
@@ -351,5 +355,5 @@ app.get('/api/completeShoppingList/:shopId', async (req,res)=>{
 
 app.get('/*', function( req,res ){
     console.log("redirect to index page!");
-    res.sendFile( path.join(__dirname, 'client/build', 'index.html') );
+    res.sendFile( path.join(__dirname, 'build', 'index.html') );
 });

@@ -1,0 +1,29 @@
+{
+  "files": {
+    "main.css": "/static/css/main.bda71626.chunk.css",
+    "main.js": "/static/js/main.225d0153.chunk.js",
+    "main.js.map": "/static/js/main.225d0153.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.8c40394c.js",
+    "runtime-main.js.map": "/static/js/runtime-main.8c40394c.js.map",
+    "static/js/2.0df23c6e.chunk.js": "/static/js/2.0df23c6e.chunk.js",
+    "static/js/2.0df23c6e.chunk.js.map": "/static/js/2.0df23c6e.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.8472b315822383336325039697bd9d7a.js": "/precache-manifest.8472b315822383336325039697bd9d7a.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/main.bda71626.chunk.css.map": "/static/css/main.bda71626.chunk.css.map",
+    "static/js/2.0df23c6e.chunk.js.LICENSE.txt": "/static/js/2.0df23c6e.chunk.js.LICENSE.txt",
+    "static/media/3959419-png.png": "/static/media/3959419-png.84c878fa.png",
+    "static/media/FRUITS.png": "/static/media/FRUITS.1b791e73.png",
+    "static/media/Rolling-1s-200px.gif": "/static/media/Rolling-1s-200px.2d4958d0.gif",
+    "static/media/VEGETABLES.png": "/static/media/VEGETABLES.67c1f599.png",
+    "static/media/index.css": "/static/media/male8.492f08f8.png",
+    "static/media/protein.png": "/static/media/protein.56bafb4f.png",
+    "static/media/spices.png": "/static/media/spices.84c7233e.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.8c40394c.js",
+    "static/js/2.0df23c6e.chunk.js",
+    "static/css/main.bda71626.chunk.css",
+    "static/js/main.225d0153.chunk.js"
+  ]
+}
